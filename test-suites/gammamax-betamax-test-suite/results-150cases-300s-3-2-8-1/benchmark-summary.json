@@ -1,0 +1,135 @@
+{
+  "workers": 24,
+  "seed": 0,
+  "case_timeout_seconds": 300,
+  "k_n_combinations": 1,
+  "base_cases": 150,
+  "implementations_per_case": 2,
+  "total_case_runs": 300,
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "python_version": "3.9.6",
+    "compiler_command": "c++",
+    "compiler_version": "InstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+    "compiler_flags": "-O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic"
+  },
+  "suite_config": {
+    "N": 150,
+    "S_plus_min": 20,
+    "S_plus_max": 40,
+    "S_minus_min": 10,
+    "S_minus_max": 30,
+    "s_min": 10,
+    "s_max": 50,
+    "d_min": 2,
+    "d_max": 10,
+    "seed": 0,
+    "workers": -1,
+    "case_timeout_seconds": 300,
+    "gammamax": {
+      "k_values": [
+        3
+      ],
+      "n_values": [
+        2
+      ],
+      "rsr_batch_size": 8,
+      "ngrams_batch_size": 1,
+      "max_candidate_length": -1,
+      "max_iterations": -1,
+      "max_total_oracle_calls": -1,
+      "max_states": -1,
+      "max_queue_size": -1
+    },
+    "betamax_old": {
+      "cross_merge_samples": 1,
+      "batch_size": 8,
+      "max_iterations": -1,
+      "max_cost": -1,
+      "oracle_timeout_ms": -1
+    }
+  },
+  "elapsed_wall_time_seconds": 2090.38533925,
+  "implementations": {
+    "gammamax-k-3-n-2": {
+      "k": 3,
+      "n": 2,
+      "rsr_batch_size": 8,
+      "ngrams_batch_size": 1,
+      "cases": 150,
+      "observed_runtime_samples": 98,
+      "censored_timeout_samples": 52,
+      "accepted_repairs": 98,
+      "timeouts": 52,
+      "errors": 52,
+      "measurement_scope": "successful non-error cases only",
+      "successful_case_total_iterations": 14231,
+      "successful_case_subalgorithm_total_time_ns": {
+        "rsr_execution_time_ns":    104108878371,
+        "ktails_execution_time_ns": 4676081,
+        "edsm_execution_time_ns":   313010265319,
+        "ngrams_execution_time_ns": 173937017,
+        "initial_state_merge_ns":   2412198333,
+        "merge_replay_ns":          43407923768,
+        "resumed_state_merge_ns":        267190143218,
+        "candidate_copy_or_rollback_ns": 63208644190,
+        "negative_validation_ns":        129316820911
+      },
+      "successful_case_subalgorithm_mean_time_ns": {
+        "rsr_execution_time_ns": 1062335493.5816326,
+        "ktails_execution_time_ns": 47715.11224489796,
+        "edsm_execution_time_ns": 3193982299.1734695,
+        "ngrams_execution_time_ns": 1774867.5204081633,
+        "initial_state_merge_ns": 24614268.704081632,
+        "merge_replay_ns": 442937997.63265306,
+        "resumed_state_merge_ns": 2726430032.836735,
+        "candidate_copy_or_rollback_ns": 644986165.2040817,
+        "negative_validation_ns": 1319559397.0510204
+      },
+      "outputs_in_positive_examples": 0,
+      "median_observed_edit_distance": 7.0,
+      "median_observed_edit_distance_is_infinite": false,
+      "mean_wall_time_seconds": 50.82529913345918,
+      "median_wall_time_seconds": 7.714425207999994
+    },
+    "betamax-old": {
+      "cases": 150,
+      "observed_runtime_samples": 83,
+      "censored_timeout_samples": 67,
+      "accepted_repairs": 83,
+      "timeouts": 67,
+      "errors": 67,
+      "measurement_scope": "successful non-error cases only",
+      "successful_case_total_iterations": null,
+      "successful_case_subalgorithm_total_time_ns": {
+        "rsr_execution_time_ns": null,
+        "ktails_execution_time_ns": null,
+        "edsm_execution_time_ns": null,
+        "ngrams_execution_time_ns": null,
+        "initial_state_merge_ns": null,
+        "merge_replay_ns": null,
+        "resumed_state_merge_ns": null,
+        "candidate_copy_or_rollback_ns": null,
+        "negative_validation_ns": null
+      },
+      "successful_case_subalgorithm_mean_time_ns": {
+        "rsr_execution_time_ns": null,
+        "ktails_execution_time_ns": null,
+        "edsm_execution_time_ns": null,
+        "ngrams_execution_time_ns": null,
+        "initial_state_merge_ns": null,
+        "merge_replay_ns": null,
+        "resumed_state_merge_ns": null,
+        "candidate_copy_or_rollback_ns": null,
+        "negative_validation_ns": null
+      },
+      "outputs_in_positive_examples": 1,
+      "median_observed_edit_distance": 10.0,
+      "median_observed_edit_distance_is_infinite": false,
+      "mean_wall_time_seconds": 36.1053399256988,
+      "median_wall_time_seconds": 9.239273541999978
+    }
+  }
+}

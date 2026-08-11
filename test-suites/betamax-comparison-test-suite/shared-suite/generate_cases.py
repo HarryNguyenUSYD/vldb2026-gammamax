@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the deterministic betaMax test corpus."""
+"""Generate the deterministic gammaMax/betaMax-old test corpus."""
 
 from __future__ import annotations
 
@@ -159,11 +159,17 @@ def _generate_case(
             source, regex, target_distance, rng, positives | negatives
         ))
 
+    examples = positives | negatives
     for _ in range(4000):
         valid_source = next(iter(_unique_valid_strings(
-            regex, generator, 1, rng, positives
+            regex, generator, 1, rng, examples
         )))
-        if config["s_min"] - config["d_min"] <= len(valid_source) <= config["s_max"]:
+        if (
+            valid_source not in examples
+            and config["s_min"] - config["d_min"]
+            <= len(valid_source)
+            <= config["s_max"]
+        ):
             break
     else:
         raise RuntimeError(f"Could not generate feasible source for {format_name}.")
@@ -174,7 +180,7 @@ def _generate_case(
         regex,
         target_distance,
         rng,
-        positives | negatives,
+        examples | {valid_source},
         config["s_min"],
         config["s_max"],
     )
@@ -212,10 +218,19 @@ def validate_cases(cases: list[dict[str, Any]], config: dict[str, int]) -> None:
         if sum(case["format"] == name for case in cases) != expected_per_format:
             raise AssertionError(f"Incorrect case count for {name}.")
     for case in cases:
+        examples = set(case["positive_examples"]) | set(case["negative_examples"])
         if re.fullmatch(case["regex"], case["valid_source"]) is None:
             raise AssertionError(f"Invalid valid_source in {case['case_id']}.")
+        if case["valid_source"] in examples:
+            raise AssertionError(
+                f"valid_source duplicates a training example in {case['case_id']}."
+            )
         if re.fullmatch(case["regex"], case["corrupt_string"]) is not None:
             raise AssertionError(f"Corrupt string is valid in {case['case_id']}.")
+        if case["corrupt_string"] in examples:
+            raise AssertionError(
+                f"corrupt_string duplicates a training example in {case['case_id']}."
+            )
         if not config["s_min"] <= len(case["corrupt_string"]) <= config["s_max"]:
             raise AssertionError(f"Corrupt length is out of range in {case['case_id']}.")
         measured = edit_distance(case["corrupt_string"], case["valid_source"])

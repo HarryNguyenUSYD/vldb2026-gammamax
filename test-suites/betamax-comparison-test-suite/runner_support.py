@@ -1,10 +1,11 @@
-"""Run the same generated cases against current and legacy betaMax."""
+"""Run generated repair cases against gammaMax."""
 
 from __future__ import annotations
 
 import csv
 import json
 import os
+import platform
 import re
 import signal
 import statistics
@@ -27,7 +28,7 @@ RESULTS = ROOT / "results"
 FORMATS = ("date", "time", "url", "isbn", "ipv4", "ipv6")
 EXE_SUFFIX = ".exe" if os.name == "nt" else ""
 EXECUTABLES = {
-    "betamax": BUILD / f"betamax{EXE_SUFFIX}",
+    "gammamax": BUILD / f"gammamax{EXE_SUFFIX}",
     "betamax-old": BUILD / f"betamax-old{EXE_SUFFIX}",
 }
 STDIN_VALIDATORS = {
@@ -38,6 +39,10 @@ FILE_VALIDATORS = {
 }
 RESULT_FIELDS = (
     "implementation",
+    "k",
+    "n",
+    "rsr_batch_size",
+    "ngrams_batch_size",
     "case_index",
     "case_id",
     "format",
@@ -52,7 +57,18 @@ RESULT_FIELDS = (
     "accuracy",
     "output_in_positive_examples",
     "observed_edit_distance",
+    "effective_seed",
     "total_execution_time_ns",
+    "rsr_execution_time_ns",
+    "ktails_execution_time_ns",
+    "edsm_execution_time_ns",
+    "ngrams_execution_time_ns",
+    "initial_state_merge_ns",
+    "merge_replay_ns",
+    "resumed_state_merge_ns",
+    "candidate_copy_or_rollback_ns",
+    "negative_validation_ns",
+    "total_iterations",
     "wall_time_seconds",
     "peak_memory_bytes",
     "timed_out",
@@ -60,36 +76,6 @@ RESULT_FIELDS = (
     "return_code",
     "stdout_tail",
     "stderr_tail",
-)
-COMPARISON_FIELDS = (
-    "case_index",
-    "case_id",
-    "format",
-    "category",
-    "corrupt_string",
-    "valid_source",
-    "true_edit_distance",
-    "outputs_equal",
-    "accuracy_winner",
-    "speed_winner",
-    "betamax_output_string",
-    "betamax_accuracy",
-    "betamax_output_in_positive_examples",
-    "betamax_observed_edit_distance",
-    "betamax_total_execution_time_ns",
-    "betamax_wall_time_seconds",
-    "betamax_peak_memory_bytes",
-    "betamax_timed_out",
-    "betamax_error",
-    "betamax_old_output_string",
-    "betamax_old_accuracy",
-    "betamax_old_output_in_positive_examples",
-    "betamax_old_observed_edit_distance",
-    "betamax_old_total_execution_time_ns",
-    "betamax_old_wall_time_seconds",
-    "betamax_old_peak_memory_bytes",
-    "betamax_old_timed_out",
-    "betamax_old_error",
 )
 
 
@@ -169,7 +155,11 @@ def edit_distance(left: str, right: str) -> int:
 
 
 def load_config() -> dict[str, Any]:
-    return json.loads(CONFIG.read_text(encoding="utf-8"))
+    value = json.loads(CONFIG.read_text(encoding="utf-8"))
+    timeout = float(value["case_timeout_seconds"])
+    if timeout != -1 and timeout <= 0:
+        raise ValueError("case_timeout_seconds must be -1 or positive")
+    return value
 
 
 def load_cases() -> list[dict[str, Any]]:
@@ -181,7 +171,26 @@ def load_cases() -> list[dict[str, Any]]:
     return value
 
 
+def k_n_combinations(config: dict[str, Any]) -> list[tuple[int, int]]:
+    settings = config["gammamax"]
+    k_values = [int(value) for value in settings["k_values"]]
+    n_values = [int(value) for value in settings["n_values"]]
+    if any(value < 0 for value in (*k_values, *n_values)):
+        raise ValueError("k and n values must be non-negative")
+    if len(set(k_values)) != len(k_values) or len(set(n_values)) != len(n_values):
+        raise ValueError("k and n lists must not contain duplicates")
+    combinations = [(k, n) for k in k_values for n in n_values]
+    if not combinations:
+        raise ValueError("no gammaMax k/n combinations configured")
+    return combinations
+
+
 def worker_count() -> int:
+    configured = int(load_config()["workers"])
+    if configured != -1:
+        if configured < 1:
+            raise ValueError("configured workers must be -1 or at least 1")
+        return configured
     try:
         affinity = os.sched_getaffinity(0)
         if affinity:
@@ -220,27 +229,17 @@ def _tail(text: str, lines: int = 10) -> str:
 
 
 def _current_config(
-    suite_config: dict[str, Any], validator: Path, case_index: int
+    suite_config: dict[str, Any], validator: Path, k: int, n: int
 ) -> dict[str, Any]:
-    settings = suite_config["betamax"]
+    settings = suite_config["gammamax"]
     return {
-        "seed": (int(suite_config["seed"]) + case_index) % (1 << 64),
+        "seed": int(suite_config["seed"]),
         "oracle": {"executable": str(validator.resolve())},
-        "neighborhood_exploration": {
-            "target_negative_examples": int(
-                settings["neighborhood_target_negative_examples"]
-            ),
-            "max_oracle_calls": int(settings["neighborhood_max_oracle_calls"]),
-        },
-        "state_merging": {
-            "cross_merge_samples": int(settings["cross_merge_samples"]),
-        },
+        "state_merging": {"k": k},
         "repair": {
-            "candidate_count": int(settings["candidate_count"]),
-            "match_cost": 0,
-            "insertion_cost": 1,
-            "deletion_cost": 1,
-            "substitution_cost": 1,
+            "n": n,
+            "rsr_batch_size": int(settings["rsr_batch_size"]),
+            "ngrams_batch_size": int(settings["ngrams_batch_size"]),
             "max_candidate_length": int(settings["max_candidate_length"]),
         },
         "limits": {
@@ -258,22 +257,16 @@ def _write_lines(path: Path, values: list[str]) -> None:
 
 def _legacy_validator_command(validator: Path) -> str:
     if os.name == "nt":
-        # Preserve literal quotes through the old shlex-like parser and use
-        # forward slashes so it cannot consume path separators as escapes.
         return f'\\"{validator.resolve().as_posix()}\\"'
     return f'"{validator.resolve()}"'
 
 
-def _legacy_arguments(
-    case_index: int,
-    case: dict[str, Any],
-    suite_config: dict[str, Any],
-    positives: Path,
-    negatives: Path,
-    broken: Path,
+def _betamax_old_arguments(
+    case: dict[str, Any], suite_config: dict[str, Any],
+    positives: Path, negatives: Path, broken: Path,
 ) -> list[str]:
-    settings = suite_config["betamax"]
-    seed = (int(suite_config["seed"]) + case_index) % (1 << 64)
+    settings = suite_config["betamax_old"]
+    seed = int(suite_config["seed"])
     return [
         str(EXECUTABLES["betamax-old"].resolve()),
         "--positives", str(positives),
@@ -282,19 +275,21 @@ def _legacy_arguments(
         "--broken-file", str(broken),
         "--oracle-validator",
         _legacy_validator_command(FILE_VALIDATORS[case["format"]]),
-        "--mutations", str(settings["neighborhood_target_negative_examples"]),
+        "--mutations", "0",
         "--mutations-seed", str(seed),
         "--xover-pairs", str(settings["cross_merge_samples"]),
         "--max-attempts", str(settings["max_iterations"]),
-        "--attempt-candidates", str(settings["candidate_count"]),
-        "--max-cost", "-1",
-        "--max-candidates", str(settings["candidate_count"]),
+        "--attempt-candidates", str(settings["batch_size"]),
+        "--max-cost", str(settings["max_cost"]),
+        "--max-candidates", str(settings["batch_size"]),
+        "--oracle-timeout-ms", str(settings["oracle_timeout_ms"]),
+        "--eq-disable-sampling",
         "--seed", str(seed),
     ]
 
 
 def _launch(
-    arguments: list[str], working_directory: Path, timeout: float
+    arguments: list[str], working_directory: Path, timeout: float | None
 ) -> tuple[str, str, int, bool]:
     process = subprocess.Popen(
         arguments,
@@ -316,12 +311,15 @@ def _launch(
 
 def execute_case(
     implementation: str,
+    k: int | None,
+    n: int | None,
     case_index: int,
     case: dict[str, Any],
     suite_config: dict[str, Any],
 ) -> dict[str, Any]:
     started = time.perf_counter()
-    timeout = float(suite_config["case_timeout_seconds"])
+    configured_timeout = float(suite_config["case_timeout_seconds"])
+    timeout = None if configured_timeout == -1 else configured_timeout
     timed_out = False
     stdout = ""
     stderr = ""
@@ -329,19 +327,31 @@ def execute_case(
     output = ""
     execution_time: int | str = ""
     peak_memory: int | str = ""
+    effective_seed: int | str = ""
+    rsr_execution_time: int | str = ""
+    ktails_execution_time: int | str = ""
+    edsm_execution_time: int | str = ""
+    ngrams_execution_time: int | str = ""
+    initial_state_merge_time: int | str = ""
+    merge_replay_time: int | str = ""
+    resumed_state_merge_time: int | str = ""
+    candidate_copy_or_rollback_time: int | str = ""
+    negative_validation_time: int | str = ""
+    total_iterations: int | str = ""
     error = ""
-
     try:
         with tempfile.TemporaryDirectory(prefix=f"{implementation}-") as directory:
             working_directory = Path(directory)
-            if implementation == "betamax":
+            if implementation == "gammamax":
+                if k is None or n is None:
+                    raise ValueError("gammaMax requires k and n")
                 input_json = {
                     "positive_examples": case["positive_examples"],
                     "negative_examples": case["negative_examples"],
                     "corrupt_string": case["corrupt_string"],
                 }
                 config_json = _current_config(
-                    suite_config, STDIN_VALIDATORS[case["format"]], case_index
+                    suite_config, STDIN_VALIDATORS[case["format"]], k, n
                 )
                 (working_directory / "input.json").write_text(
                     json.dumps(input_json, indent=2) + "\n", encoding="utf-8"
@@ -349,7 +359,7 @@ def execute_case(
                 (working_directory / "config.json").write_text(
                     json.dumps(config_json, indent=2) + "\n", encoding="utf-8"
                 )
-                arguments = [str(EXECUTABLES["betamax"].resolve())]
+                arguments = [str(EXECUTABLES["gammamax"].resolve())]
             elif implementation == "betamax-old":
                 positives = working_directory / "positives.txt"
                 negatives = working_directory / "negatives.txt"
@@ -358,8 +368,8 @@ def execute_case(
                 _write_lines(negatives, case["negative_examples"])
                 with broken.open("w", encoding="ascii", newline="") as stream:
                     stream.write(case["corrupt_string"])
-                arguments = _legacy_arguments(
-                    case_index, case, suite_config, positives, negatives, broken
+                arguments = _betamax_old_arguments(
+                    case, suite_config, positives, negatives, broken
                 )
             else:
                 raise ValueError(f"unknown implementation: {implementation}")
@@ -369,31 +379,60 @@ def execute_case(
             )
 
         if timed_out:
-            error = f"Algorithm exceeded {timeout:g} seconds."
+            error = f"Algorithm exceeded {configured_timeout:g} seconds."
         elif return_code != 0:
             error = f"Process exited with code {return_code}."
-        elif implementation == "betamax":
+        elif implementation == "gammamax":
             parsed = json.loads(stdout)
             required = {
-                "output_string", "peak_memory_bytes", "total_execution_time_ns"
+                "output_string", "effective_seed", "peak_memory_bytes",
+                "total_execution_time_ns", "rsr_execution_time_ns",
+                "ktails_execution_time_ns", "edsm_execution_time_ns",
+                "ngrams_execution_time_ns", "initial_state_merge_ns",
+                "merge_replay_ns", "resumed_state_merge_ns",
+                "candidate_copy_or_rollback_ns", "negative_validation_ns",
+                "total_iterations"
             }
             if not isinstance(parsed, dict) or set(parsed) != required:
-                raise ValueError("betaMax stdout has an unexpected JSON shape")
+                raise ValueError("gammaMax stdout has an unexpected JSON shape")
             if not isinstance(parsed["output_string"], str):
-                raise ValueError("betaMax output_string is not a string")
+                raise ValueError("gammaMax output_string is not a string")
             if not isinstance(parsed["peak_memory_bytes"], int):
-                raise ValueError("betaMax peak_memory_bytes is not an integer")
+                raise ValueError("gammaMax peak_memory_bytes is not an integer")
             if not isinstance(parsed["total_execution_time_ns"], int):
-                raise ValueError("betaMax total_execution_time_ns is not an integer")
+                raise ValueError("gammaMax total_execution_time_ns is not an integer")
+            if not isinstance(parsed["effective_seed"], int):
+                raise ValueError("gammaMax effective_seed is not an integer")
+            for field in (
+                "rsr_execution_time_ns", "ktails_execution_time_ns",
+                "edsm_execution_time_ns", "ngrams_execution_time_ns",
+                "initial_state_merge_ns", "merge_replay_ns",
+                "resumed_state_merge_ns", "candidate_copy_or_rollback_ns",
+                "negative_validation_ns",
+                "total_iterations",
+            ):
+                if not isinstance(parsed[field], int):
+                    raise ValueError(f"gammaMax {field} is not an integer")
             output = parsed["output_string"]
+            effective_seed = parsed["effective_seed"]
             execution_time = parsed["total_execution_time_ns"]
             peak_memory = parsed["peak_memory_bytes"]
+            rsr_execution_time = parsed["rsr_execution_time_ns"]
+            ktails_execution_time = parsed["ktails_execution_time_ns"]
+            edsm_execution_time = parsed["edsm_execution_time_ns"]
+            ngrams_execution_time = parsed["ngrams_execution_time_ns"]
+            initial_state_merge_time = parsed["initial_state_merge_ns"]
+            merge_replay_time = parsed["merge_replay_ns"]
+            resumed_state_merge_time = parsed["resumed_state_merge_ns"]
+            candidate_copy_or_rollback_time = parsed["candidate_copy_or_rollback_ns"]
+            negative_validation_time = parsed["negative_validation_ns"]
+            total_iterations = parsed["total_iterations"]
         else:
             output = stdout[:-1] if stdout.endswith("\n") else stdout
             if output.endswith("\r"):
                 output = output[:-1]
             if "\n" in output or "\r" in output:
-                raise ValueError("betamax-old emitted more than one stdout line")
+                raise ValueError("betaMax-old emitted more than one stdout line")
     except Exception as exception:
         error = f"{type(exception).__name__}: {exception}"
 
@@ -402,8 +441,13 @@ def execute_case(
     if not error and not accepted:
         error = "Repair was rejected by the format validator."
 
+
     return {
         "implementation": implementation,
+        "k": "" if k is None else k,
+        "n": "" if n is None else n,
+        "rsr_batch_size": suite_config["gammamax"]["rsr_batch_size"] if implementation == "gammamax" else "",
+        "ngrams_batch_size": suite_config["gammamax"]["ngrams_batch_size"] if implementation == "gammamax" else "",
         "case_index": case_index,
         "case_id": case["case_id"],
         "format": case["format"],
@@ -418,7 +462,18 @@ def execute_case(
         "accuracy": int(accepted),
         "output_in_positive_examples": int(output in case["positive_examples"]),
         "observed_edit_distance": edit_distance(case["corrupt_string"], output),
+        "effective_seed": effective_seed,
         "total_execution_time_ns": execution_time,
+        "rsr_execution_time_ns": rsr_execution_time,
+        "ktails_execution_time_ns": ktails_execution_time,
+        "edsm_execution_time_ns": edsm_execution_time,
+        "ngrams_execution_time_ns": ngrams_execution_time,
+        "initial_state_merge_ns": initial_state_merge_time,
+        "merge_replay_ns": merge_replay_time,
+        "resumed_state_merge_ns": resumed_state_merge_time,
+        "candidate_copy_or_rollback_ns": candidate_copy_or_rollback_time,
+        "negative_validation_ns": negative_validation_time,
+        "total_iterations": total_iterations,
         "wall_time_seconds": elapsed,
         "peak_memory_bytes": peak_memory,
         "timed_out": int(timed_out),
@@ -431,6 +486,8 @@ def execute_case(
 
 def _run_phase(
     implementation: str,
+    k: int | None,
+    n: int | None,
     cases: list[dict[str, Any]],
     config: dict[str, Any],
     workers: int,
@@ -439,15 +496,16 @@ def _run_phase(
     timer_started: float,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any] | None] = [None] * len(cases)
-    print(f"{implementation}: {len(cases)} cases, {workers} workers", flush=True)
+    label = implementation if k is None else f"{implementation}-k-{k}-n-{n}"
+    print(f"{label}: {len(cases)} cases, {workers} workers", flush=True)
     progress = ProgressReporter(
-        implementation, len(cases), total_executions, total_offset, timer_started
+        label, len(cases), total_executions, total_offset, timer_started
     )
     progress.start()
     try:
         with ProcessPoolExecutor(max_workers=workers) as pool:
             futures = {
-                pool.submit(execute_case, implementation, index, case, config): index
+                pool.submit(execute_case, implementation, k, n, index, case, config): index
                 for index, case in enumerate(cases)
             }
             for future in as_completed(futures):
@@ -457,58 +515,6 @@ def _run_phase(
     finally:
         progress.close()
     return [row for row in rows if row is not None]
-
-
-def _comparison_rows(
-    current: list[dict[str, Any]], legacy: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    if len(current) != len(legacy):
-        raise ValueError("implementation result counts differ")
-    rows: list[dict[str, Any]] = []
-    for new, old in zip(current, legacy):
-        if new["case_id"] != old["case_id"]:
-            raise ValueError("implementation results are not case-aligned")
-        if new["accuracy"] == old["accuracy"]:
-            accuracy_winner = "tie"
-        elif new["accuracy"]:
-            accuracy_winner = "betamax"
-        else:
-            accuracy_winner = "betamax-old"
-
-        comparable_speed = (
-            new["accuracy"] and old["accuracy"] and
-            not new["timed_out"] and not old["timed_out"]
-        )
-        if not comparable_speed:
-            speed_winner = ""
-        elif new["wall_time_seconds"] == old["wall_time_seconds"]:
-            speed_winner = "tie"
-        elif new["wall_time_seconds"] < old["wall_time_seconds"]:
-            speed_winner = "betamax"
-        else:
-            speed_winner = "betamax-old"
-
-        row = {
-            "case_index": new["case_index"],
-            "case_id": new["case_id"],
-            "format": new["format"],
-            "category": new["category"],
-            "corrupt_string": new["corrupt_string"],
-            "valid_source": new["valid_source"],
-            "true_edit_distance": new["true_edit_distance"],
-            "outputs_equal": int(new["output_string"] == old["output_string"]),
-            "accuracy_winner": accuracy_winner,
-            "speed_winner": speed_winner,
-        }
-        for prefix, result in (("betamax", new), ("betamax_old", old)):
-            for field in (
-                "output_string", "accuracy", "output_in_positive_examples",
-                "observed_edit_distance", "total_execution_time_ns",
-                "wall_time_seconds", "peak_memory_bytes", "timed_out", "error",
-            ):
-                row[f"{prefix}_{field}"] = result[field]
-        rows.append(row)
-    return rows
 
 
 def _write_csv(
@@ -524,17 +530,78 @@ def _write_csv(
 
 
 def _summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    wall_times = [float(row["wall_time_seconds"]) for row in rows]
+    observed = [row for row in rows if not row["timed_out"] and not row["error"]]
+    wall_times = [float(row["wall_time_seconds"]) for row in observed]
+    edit_distances = [
+        float("inf") if row["timed_out"] else int(row["observed_edit_distance"])
+        for row in rows
+    ]
+    measurement_fields = (
+        "rsr_execution_time_ns", "ktails_execution_time_ns",
+        "edsm_execution_time_ns", "ngrams_execution_time_ns",
+        "initial_state_merge_ns", "merge_replay_ns",
+        "resumed_state_merge_ns", "candidate_copy_or_rollback_ns",
+        "negative_validation_ns",
+    )
+    measurement_samples = {
+        field: [int(row[field]) for row in observed if row[field] != ""]
+        for field in measurement_fields
+    }
+    measurement_totals = {
+        field: (sum(values) if values else None)
+        for field, values in measurement_samples.items()
+    }
+    measurement_means = {
+        field: (statistics.fmean(values) if values else None)
+        for field, values in measurement_samples.items()
+    }
+    iteration_samples = [
+        int(row["total_iterations"])
+        for row in observed
+        if row["total_iterations"] != ""
+    ]
     return {
         "cases": len(rows),
+        "observed_runtime_samples": len(wall_times),
+        "censored_timeout_samples": sum(int(row["timed_out"]) for row in rows),
         "accepted_repairs": sum(int(row["accuracy"]) for row in rows),
         "timeouts": sum(int(row["timed_out"]) for row in rows),
         "errors": sum(bool(row["error"]) for row in rows),
+        "total_iterations": sum(iteration_samples) if iteration_samples else None,
+        "subalgorithm_total_time_ns": measurement_totals,
+        "subalgorithm_mean_time_ns": measurement_means,
         "outputs_in_positive_examples": sum(
             int(row["output_in_positive_examples"]) for row in rows
         ),
-        "mean_wall_time_seconds": statistics.fmean(wall_times) if wall_times else 0,
-        "median_wall_time_seconds": statistics.median(wall_times) if wall_times else 0,
+        "median_observed_edit_distance": (
+            statistics.median(edit_distances) if edit_distances else None
+        ),
+        "mean_wall_time_seconds": statistics.fmean(wall_times) if wall_times else None,
+        "median_wall_time_seconds": statistics.median(wall_times) if wall_times else None,
+    }
+
+
+def _environment_metadata() -> dict[str, Any]:
+    compiler = os.environ.get("CXX", "c++")
+    flags = os.environ.get(
+        "CXXFLAGS", "-O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic"
+    )
+    try:
+        completed = subprocess.run(
+            [compiler, "--version"], capture_output=True, text=True, timeout=10,
+            check=False,
+        )
+        compiler_version = _tail(completed.stdout or completed.stderr, lines=1)
+    except (OSError, subprocess.SubprocessError) as exception:
+        compiler_version = f"unavailable: {type(exception).__name__}: {exception}"
+    return {
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+        "processor": platform.processor(),
+        "python_version": platform.python_version(),
+        "compiler_command": compiler,
+        "compiler_version": compiler_version,
+        "compiler_flags": flags,
     }
 
 
@@ -555,38 +622,53 @@ def run_benchmark(
     started = time.perf_counter()
     timer_started = time.monotonic()
 
-    # Separate phases prevent one implementation from competing with the other
-    # for CPU while preserving maximum parallelism within each implementation.
-    total_executions = len(cases) * 2
-    current = _run_phase(
-        "betamax", cases, config, workers,
-        total_offset=0, total_executions=total_executions,
+    combinations = k_n_combinations(config)
+    total_executions = len(cases) * (len(combinations) + 1)
+    all_rows: list[dict[str, Any]] = []
+    summaries: dict[str, Any] = {}
+    total_offset = 0
+    for k, n in combinations:
+        label = f"gammamax-k-{k}-n-{n}"
+        rows = _run_phase(
+            "gammamax", k, n, cases, config, workers,
+            total_offset=total_offset, total_executions=total_executions,
+            timer_started=timer_started,
+        )
+        all_rows.extend(rows)
+        summaries[label] = {
+            "k": k,
+            "n": n,
+            "rsr_batch_size": int(config["gammamax"]["rsr_batch_size"]),
+            "ngrams_batch_size": int(config["gammamax"]["ngrams_batch_size"]),
+            **_summary(rows),
+        }
+        total_offset += len(cases)
+
+    betamax_rows = _run_phase(
+        "betamax-old", None, None, cases, config, workers,
+        total_offset=total_offset, total_executions=total_executions,
         timer_started=timer_started,
     )
-    legacy = _run_phase(
-        "betamax-old", cases, config, workers,
-        total_offset=len(cases), total_executions=total_executions,
-        timer_started=timer_started,
-    )
-    combined = current + legacy
-    comparisons = _comparison_rows(current, legacy)
+    all_rows.extend(betamax_rows)
+    summaries["betamax-old"] = _summary(betamax_rows)
 
     results_path = RESULTS / f"{result_stem}.csv"
-    comparison_path = RESULTS / f"{result_stem}-comparison.csv"
     summary_path = RESULTS / f"{result_stem}-summary.json"
-    _write_csv(results_path, RESULT_FIELDS, combined)
-    _write_csv(comparison_path, COMPARISON_FIELDS, comparisons)
+    _write_csv(results_path, RESULT_FIELDS, all_rows)
     summary = {
         "workers": workers,
+        "seed": config["seed"],
         "case_timeout_seconds": config["case_timeout_seconds"],
+        "k_n_combinations": len(combinations),
+        "base_cases": len(cases),
+        "implementations_per_case": len(combinations) + 1,
+        "total_case_runs": total_executions,
+        "environment": _environment_metadata(),
+        "suite_config": config,
         "elapsed_wall_time_seconds": time.perf_counter() - started,
-        "implementations": {
-            "betamax": _summary(current),
-            "betamax-old": _summary(legacy),
-        },
+        "implementations": summaries,
     }
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {results_path}", flush=True)
-    print(f"wrote {comparison_path}", flush=True)
     print(f"wrote {summary_path}", flush=True)

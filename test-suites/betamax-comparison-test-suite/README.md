@@ -1,7 +1,7 @@
-# betaMax implementation comparison suite
+# gammaMax / betaMax-old comparison suite
 
-This directory is a self-contained benchmark for `betamax` and `betamax-old`.
-It includes source snapshots of both implementations, the vendored JSON header,
+This directory is a self-contained benchmark for the newest `gammamax` source
+and `betamax-old`. It includes source snapshots of both implementations, the vendored JSON header,
 both validator protocols, suite configuration, deterministic generator, and
 150 generated cases. It requires no repository checkout, archive extraction,
 package download, or network access on the server.
@@ -36,9 +36,8 @@ That single command compiles both implementations and all validators,
 regenerates the deterministic corpus, and runs all 150 cases. `make smoke`
 runs only the first 10 cases. Each implementation runs as a separate phase so
 they do not compete with one another. Every test phase uses the largest worker
-count exposed by CPU affinity or the operating system. Each case has a
-300-second timeout, so the legacy phase can take a long time when many cases
-reach that timeout.
+count exposed by CPU affinity or the operating system. Each program has a
+300-second per-case timeout.
 
 The equivalent CMake build is:
 
@@ -55,18 +54,33 @@ Outputs are placed in `results/`:
 - `benchmark[-smoke]-summary.json`: aggregate accuracy, timeout, reuse, and
   wall-time measurements.
 
-The current implementation receives its normal `input.json` and `config.json`.
+gammaMax receives its normal `input.json` and `config.json`.
 The legacy adapter converts the same case into its required positive, negative,
 and broken-string files. Its validator takes a filename because that is the
 protocol hard-coded by the legacy oracle. Neither implementation receives the
 case's `valid_source`, regular expression, or true edit distance; those values
 are used only after execution for scoring.
 
-The shared `-1` limits map directly to the current implementation. The old CLI
+The shared `-1` limits map directly to gammaMax. The old CLI
 supports `-1` for attempts and repair cost, so those are also unbounded. Modern
-limits with no old equivalent are omitted, and its internal hard-coded search
-safeguards remain. Both versions retain the suite's outer 300-second per-case
-timeout.
+limits with no old equivalent are omitted. Legacy internal repair-search caps
+and per-oracle timeout are disabled. Both programs retain the suite's outer
+300-second per-case timeout.
+
+## Benchmark controls
+
+The suite uses seed `0`, gammaMax `k=3`, `n=2`, and candidate batch sizes
+of `8`. It uses unit edit costs,
+the maximum CPU-affinity worker count available on the device, separate
+implementation phases, and a 300-second outer timeout per case. Current betaMax
+resource limits and legacy repair cost/attempt limits are unbounded. Legacy
+mutation augmentation, EQ sampling, per-oracle timeout, and repair-search
+path/push caps are disabled. Timeout observations remain in raw CSV output;
+runtime statistics treat them as censored, while median edit distance treats
+them as infinite. Summary JSON also records full suite config,
+platform, processor, compiler command/version/flags, Python version, worker
+count, seed, and timeout. All configurable resource limits remain unbounded
+(`-1`); only the outer per-case timeout is bounded at 300 seconds.
 
 Live progress uses `completed A/B (total C/D)`: `A/B` resets for each
 implementation, while `C/D` spans both phases. The elapsed-seconds prefix

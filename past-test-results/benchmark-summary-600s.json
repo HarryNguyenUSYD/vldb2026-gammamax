@@ -1,0 +1,131 @@
+{
+  "workers": 24,
+  "seed": 0,
+  "case_timeout_seconds": 600,
+  "k_n_combinations": 1,
+  "base_cases": 150,
+  "implementations_per_case": 2,
+  "total_case_runs": 300,
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "python_version": "3.9.6",
+    "compiler_command": "c++",
+    "compiler_version": "InstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+    "compiler_flags": "-O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic"
+  },
+  "suite_config": {
+    "N": 150,
+    "S_plus_min": 20,
+    "S_plus_max": 40,
+    "S_minus_min": 10,
+    "S_minus_max": 30,
+    "s_min": 10,
+    "s_max": 50,
+    "d_min": 2,
+    "d_max": 10,
+    "seed": 0,
+    "workers": -1,
+    "case_timeout_seconds": 600,
+    "gammamax": {
+      "k_values": [
+        3
+      ],
+      "n_values": [
+        2
+      ],
+      "rsr_batch_size": 8,
+      "ngrams_batch_size": 1,
+      "max_candidate_length": -1,
+      "max_iterations": -1,
+      "max_total_oracle_calls": -1,
+      "max_states": -1,
+      "max_queue_size": -1
+    },
+    "betamax_old": {
+      "cross_merge_samples": 1,
+      "batch_size": 8,
+      "max_iterations": -1,
+      "max_cost": -1,
+      "oracle_timeout_ms": -1
+    }
+  },
+  "elapsed_wall_time_seconds": 3061.663330333,
+  "implementations": {
+    "gammamax-k-3-n-2": {
+      "k": 3,
+      "n": 2,
+      "rsr_batch_size": 8,
+      "ngrams_batch_size": 1,
+      "cases": 150,
+      "observed_runtime_samples": 111,
+      "censored_timeout_samples": 39,
+      "accepted_repairs": 111,
+      "timeouts": 39,
+      "errors": 39,
+      "total_iterations": 40568,
+      "subalgorithm_total_time_ns": {
+        "rsr_execution_time_ns": 466142117064,
+        "ktails_execution_time_ns": 3204428,
+        "edsm_execution_time_ns": 974516550750,
+        "ngrams_execution_time_ns": 366401888,
+        "initial_state_merge_ns": 2176066707,
+        "merge_replay_ns": 148999673514,
+        "resumed_state_merge_ns": 823340810529,
+        "candidate_copy_or_rollback_ns": 132754234522,
+        "negative_validation_ns": 573687452867
+      },
+      "subalgorithm_mean_time_ns": {
+        "rsr_execution_time_ns": 4199478532.108108,
+        "ktails_execution_time_ns": 28868.72072072072,
+        "edsm_execution_time_ns": 8779428385.135136,
+        "ngrams_execution_time_ns": 3300917.90990991,
+        "initial_state_merge_ns": 19604204.56756757,
+        "merge_replay_ns": 1342339401.0270271,
+        "resumed_state_merge_ns": 7417484779.540541,
+        "candidate_copy_or_rollback_ns": 1195984094.7927928,
+        "negative_validation_ns": 5168355431.234234
+      },
+      "outputs_in_positive_examples": 1,
+      "median_observed_edit_distance": 7.0,
+      "mean_wall_time_seconds": 32.223695228270266,
+      "median_wall_time_seconds": 4.422978166999997
+    },
+    "betamax-old": {
+      "cases": 150,
+      "observed_runtime_samples": 135,
+      "censored_timeout_samples": 15,
+      "accepted_repairs": 135,
+      "timeouts": 15,
+      "errors": 15,
+      "total_iterations": null,
+      "subalgorithm_total_time_ns": {
+        "rsr_execution_time_ns": null,
+        "ktails_execution_time_ns": null,
+        "edsm_execution_time_ns": null,
+        "ngrams_execution_time_ns": null,
+        "initial_state_merge_ns": null,
+        "merge_replay_ns": null,
+        "resumed_state_merge_ns": null,
+        "candidate_copy_or_rollback_ns": null,
+        "negative_validation_ns": null
+      },
+      "subalgorithm_mean_time_ns": {
+        "rsr_execution_time_ns": null,
+        "ktails_execution_time_ns": null,
+        "edsm_execution_time_ns": null,
+        "ngrams_execution_time_ns": null,
+        "initial_state_merge_ns": null,
+        "merge_replay_ns": null,
+        "resumed_state_merge_ns": null,
+        "candidate_copy_or_rollback_ns": null,
+        "negative_validation_ns": null
+      },
+      "outputs_in_positive_examples": 0,
+      "median_observed_edit_distance": 6.0,
+      "mean_wall_time_seconds": 208.90427684843704,
+      "median_wall_time_seconds": 177.14367554199987
+    }
+  }
+}

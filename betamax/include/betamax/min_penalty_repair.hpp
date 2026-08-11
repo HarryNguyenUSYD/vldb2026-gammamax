@@ -30,7 +30,7 @@ inline unsigned char edit_rank(EditKind kind) {
         case EditKind::Start: return 0;
         case EditKind::Match: return 1;
         case EditKind::Insert: return 2;
-        case EditKind::SigmaPlus: return 3;
+        case EditKind::Delete: return 3;
         case EditKind::Substitute: return 4;
     }
     return 255;
@@ -81,7 +81,7 @@ inline std::string reconstruct_candidate(const std::vector<SearchEnvelope>& node
          cursor = nodes.at(static_cast<std::size_t>(cursor)).node.predecessor) {
         const auto& node = nodes.at(static_cast<std::size_t>(cursor)).node;
         if (node.edit == EditKind::Match || node.edit == EditKind::Insert ||
-            node.edit == EditKind::SigmaPlus || node.edit == EditKind::Substitute) {
+            node.edit == EditKind::Substitute) {
             reversed.push_back(node.emitted);
         }
     }
@@ -96,8 +96,8 @@ inline std::optional<RepairCandidate> min_penalty_repair(
         throw std::runtime_error("unsafe zero-cost cycle in covering grammar");
     }
 
-    using SeenKey = std::tuple<std::size_t, StateId, std::uint64_t, std::string>;
-    std::map<SeenKey, std::string> best_edit_order;
+    using SeenKey = std::pair<std::size_t, StateId>;
+    std::map<SeenKey, std::uint64_t> best_cost;
     std::vector<SearchEnvelope> nodes;
     nodes.reserve(std::min<std::size_t>(config.max_queue_size, 4096));
     SearchQueueOrder queue_order{&nodes, &automaton, input.size()};
@@ -107,13 +107,13 @@ inline std::optional<RepairCandidate> min_penalty_repair(
     const auto enqueue = [&](RepairNode node, std::string output, std::string edit_order,
                              auto& self) -> void {
         (void)self;
-        const SeenKey key{node.input_position, automaton.resolve(node.state), node.cost, output};
-        auto found = best_edit_order.find(key);
-        if (found != best_edit_order.end() && found->second <= edit_order) {
+        node.state = automaton.resolve(node.state);
+        const SeenKey key{node.input_position, node.state};
+        auto found = best_cost.find(key);
+        if (found != best_cost.end() && found->second <= node.cost) {
             return;
         }
-        best_edit_order[key] = edit_order;
-        node.state = automaton.resolve(node.state);
+        best_cost[key] = node.cost;
         nodes.push_back(SearchEnvelope{node, std::move(output), std::move(edit_order)});
         queue.push(nodes.size() - 1);
         if (queue.size() > config.max_queue_size) {
@@ -131,10 +131,9 @@ inline std::optional<RepairCandidate> min_penalty_repair(
         const std::size_t index = queue.top();
         queue.pop();
         const SearchEnvelope current = nodes.at(index);
-        const SeenKey current_key{current.node.input_position, current.node.state,
-                                  current.node.cost, current.output};
-        const auto best = best_edit_order.find(current_key);
-        if (best == best_edit_order.end() || best->second != current.edit_order) {
+        const SeenKey current_key{current.node.input_position, current.node.state};
+        const auto best = best_cost.find(current_key);
+        if (best == best_cost.end() || best->second != current.node.cost) {
             continue;
         }
         const auto configuration =
@@ -172,6 +171,15 @@ inline std::optional<RepairCandidate> min_penalty_repair(
             enqueue(next, std::move(output), make_edit_order(edit, emitted), enqueue);
         };
 
+        // Match the legacy implementation's Levenshtein deletion: consume
+        // exactly one input symbol, emit nothing, and charge once per symbol.
+        if (current.node.input_position < input.size()) {
+            append_node(current.node.state, current.node.input_position + 1,
+                        checked_add_cost(current.node.cost, grammar.deletion_cost()),
+                        EditKind::Delete, input[current.node.input_position],
+                        current.output);
+        }
+
         for (const auto& [symbol, raw_destination] :
              automaton.state(current.node.state).transitions) {
             const StateId destination = automaton.resolve(raw_destination);
@@ -199,22 +207,6 @@ inline std::optional<RepairCandidate> min_penalty_repair(
                             EditKind::Substitute, emitted, std::move(consumed_output));
             }
 
-            // Covering production T_x -> Sigma+ x: consume one or more extra
-            // input symbols followed by x, emit x, and charge once for the
-            // production regardless of how many extra symbols it consumes.
-            for (std::size_t end = current.node.input_position + 1;
-                 end < input.size(); ++end) {
-                if (static_cast<unsigned char>(input[end]) != symbol) {
-                    continue;
-                }
-                std::string repaired_output = current.output;
-                repaired_output.push_back(emitted);
-                append_node(destination, end + 1,
-                            checked_add_cost(current.node.cost,
-                                             grammar.deletion_cost()),
-                            EditKind::SigmaPlus, emitted,
-                            std::move(repaired_output));
-            }
         }
     }
     return std::nullopt;

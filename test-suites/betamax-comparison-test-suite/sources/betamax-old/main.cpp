@@ -212,7 +212,7 @@ static void print_usage(const char* argv0) {
       << "  --repo-root <path>              (default: .)\n"
       << "  --max-cost <int>                (default: 3; -1 disables the fixed cap)\n"
       << "  --max-candidates <int>          (default: 50)\n"
-      << "  --oracle-timeout-ms <int>       (default: 3000)\n"
+      << "  --oracle-timeout-ms <int>       (default: 3000; -1 disables)\n"
       << "  --eq-disable-sampling           (disable oracle-based negative sampling)\n"
       << "  --eq-max-length <int>           (default: 10)\n"
       << "  --eq-samples-per-length <int>   (default: 20)\n"
@@ -320,7 +320,7 @@ static std::optional<Options> parse_args(int argc, char** argv) {
   // Allow max_cost = -1 as "unbounded".
   if (opt.max_cost < -1) opt.max_cost = -1;
   if (opt.max_candidates < 1) opt.max_candidates = 1;
-  if (opt.oracle_timeout_ms < 1) opt.oracle_timeout_ms = 1;
+  if (opt.oracle_timeout_ms < -1) opt.oracle_timeout_ms = -1;
   if (opt.mutations < 0) opt.mutations = 0;
   if (opt.mutations_edits < 1) opt.mutations_edits = 1;
   if (opt.max_attempts == 0) opt.max_attempts = 1;
@@ -1123,7 +1123,7 @@ struct Oracle {
       if (r == 0) {
         auto now = std::chrono::steady_clock::now();
         auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
-        if (elapsed_ms > timeout_ms) {
+        if (timeout_ms >= 0 && elapsed_ms > timeout_ms) {
           if (debug) std::cerr << "[WARN] Oracle timed out after " << timeout_ms << "ms; killing.\n";
           ::kill(pid, SIGKILL);
           (void)::waitpid(pid, &status, 0);
@@ -1200,20 +1200,14 @@ static std::vector<RepairCandidate> generate_candidates_to_dfa(
     return (int)steps.size() - 1;
   };
 
-  // Allow multiple distinct paths per (state,pos,cost) to avoid collapsing away
-  // oracle-valid solutions that share the same product node.
-  constexpr int max_paths_per_key = 160;
   const size_t key_w = broken.size() + 1;
-  const size_t key_cost = (size_t)max_cost + 1;
-  auto key = [&](int st, int pos, int cost) -> size_t {
-    return ((size_t)st * key_w + (size_t)pos) * key_cost + (size_t)cost;
+  auto key = [&](int st, int pos) -> size_t {
+    return (size_t)st * key_w + (size_t)pos;
   };
-  std::vector<uint16_t> seen(dfa.trans.size() * key_w * key_cost, 0);
-  const size_t push_budget = (size_t)std::max(1000, max_candidates * 20000);
-  size_t pushed = 0;
+  std::vector<int> best(dfa.trans.size() * key_w, std::numeric_limits<int>::max());
 
   pq.push(Node{0, dfa.start, 0, 0});
-  seen[key(dfa.start, 0, 0)] = 1;
+  best[key(dfa.start, 0)] = 0;
 
   std::vector<RepairCandidate> out;
 
@@ -1230,12 +1224,10 @@ static std::vector<RepairCandidate> generate_candidates_to_dfa(
 
     auto try_push = [&](int ncost, int nstate, int npos, int npath) {
       if (ncost > max_cost) return;
-      if (pushed >= push_budget) return;
-      size_t k = key(nstate, npos, ncost);
-      if ((int)seen[k] >= max_paths_per_key) return;
-      seen[k] = (uint16_t)(seen[k] + 1);
+      size_t k = key(nstate, npos);
+      if (ncost >= best[k]) return;
+      best[k] = ncost;
       pq.push(Node{ncost, nstate, npos, npath});
-      pushed++;
     };
 
     // Delete: consume input without emitting.
@@ -1300,44 +1292,23 @@ static std::vector<RepairCandidate> generate_candidates_to_dfa_unbounded(
   };
 
   const size_t key_w = broken.size() + 1;
-  const size_t push_budget = (size_t)std::max(1000, max_candidates * 20000);
-  size_t pushed = 0;
-
-  // Allow multiple distinct paths per (state,pos,cost) to reduce over-collapsing.
-  constexpr int max_paths_per_key = 160;
-
-  // Seen-count per (state,pos,cost) packed key. Keeps memory bounded by push_budget.
-  std::unordered_map<uint64_t, uint16_t> seen;
-  seen.reserve(push_budget / 4 + 64);
-
-  auto pack_key = [&](int st, int pos, int cost) -> uint64_t {
-    // cost: 22 bits, st: 21 bits, pos: 21 bits
-    return (uint64_t)(cost & ((1 << 22) - 1)) << 42 |
-           (uint64_t)(st & ((1 << 21) - 1)) << 21 |
-           (uint64_t)(pos & ((1 << 21) - 1));
+  auto key = [&](int st, int pos) -> size_t {
+    return (size_t)st * key_w + (size_t)pos;
   };
+  std::vector<int> best(dfa.trans.size() * key_w, std::numeric_limits<int>::max());
 
   auto try_push = [&](int ncost, int nstate, int npos, int npath) {
     if (ncost < 0) return;
-    if (ncost >= (1 << 22)) return;  // avoid pack overflow; far beyond any practical edit distance here
-    if (pushed >= push_budget) return;
     if ((size_t)nstate >= dfa.trans.size()) return;
     if (npos < 0 || (size_t)npos >= key_w) return;
-
-    uint64_t k = pack_key(nstate, npos, ncost);
-    auto it = seen.find(k);
-    if (it != seen.end() && (int)it->second >= max_paths_per_key) return;
-    if (it == seen.end()) {
-      seen.emplace(k, 1);
-    } else {
-      it->second = (uint16_t)(it->second + 1);
-    }
+    size_t k = key(nstate, npos);
+    if (ncost >= best[k]) return;
+    best[k] = ncost;
     pq.push(Node{ncost, nstate, npos, npath});
-    pushed++;
   };
 
   pq.push(Node{0, dfa.start, 0, 0});
-  seen.emplace(pack_key(dfa.start, 0, 0), 1);
+  best[key(dfa.start, 0)] = 0;
 
   std::vector<RepairCandidate> out;
   out.reserve((size_t)std::max(1, max_candidates));

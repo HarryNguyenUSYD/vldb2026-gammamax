@@ -1,0 +1,32 @@
+{
+  "N": 150,
+  "S_plus_min": 20,
+  "S_plus_max": 40,
+  "S_minus_min": 10,
+  "S_minus_max": 30,
+  "s_min": 10,
+  "s_max": 50,
+  "d_min": 2,
+  "d_max": 10,
+  "seed": 0,
+  "workers": -1,
+  "case_timeout_seconds": 600,
+  "gammamax": {
+    "k_values": [3],
+    "n_values": [2],
+    "rsr_batch_size": 8,
+    "ngrams_batch_size": 1,
+    "max_candidate_length": -1,
+    "max_iterations": -1,
+    "max_total_oracle_calls": -1,
+    "max_states": -1,
+    "max_queue_size": -1
+  },
+  "betamax_old": {
+    "cross_merge_samples": 1,
+    "batch_size": 8,
+    "max_iterations": -1,
+    "max_cost": -1,
+    "oracle_timeout_ms": -1
+  }
+}

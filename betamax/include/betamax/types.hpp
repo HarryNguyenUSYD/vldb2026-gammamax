@@ -48,7 +48,7 @@ enum class EditKind : std::uint8_t {
     Start,
     Match,
     Insert,
-    SigmaPlus,
+    Delete,
     Substitute
 };
 
