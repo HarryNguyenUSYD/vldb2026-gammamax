@@ -1,0 +1,21 @@
+UCI ID: 20
+Name: Census Income
+Rows: 48842
+Columns: 15
+
+Column types:
+age               int64
+workclass           str
+fnlwgt            int64
+education           str
+education-num     int64
+marital-status      str
+occupation          str
+relationship        str
+race                str
+sex                 str
+capital-gain      int64
+capital-loss      int64
+hours-per-week    int64
+native-country      str
+income              str

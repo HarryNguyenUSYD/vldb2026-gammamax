@@ -1,0 +1,236 @@
+{
+  "dataset": "adult_20",
+  "source": "clean.csv",
+  "domain_reference": "../COLUMN_VALUES.md",
+  "oracles": [
+    {
+      "column": "age",
+      "description": "Census Income column age",
+      "type": "integer",
+      "minimum": 17,
+      "maximum": 90,
+      "output": "age.cpp"
+    },
+    {
+      "column": "workclass",
+      "description": "Census Income column workclass",
+      "type": "list",
+      "values": [
+        "",
+        "?",
+        "Federal-gov",
+        "Local-gov",
+        "Never-worked",
+        "Private",
+        "Self-emp-inc",
+        "Self-emp-not-inc",
+        "State-gov",
+        "Without-pay"
+      ],
+      "output": "workclass.cpp"
+    },
+    {
+      "column": "fnlwgt",
+      "description": "Census Income column fnlwgt",
+      "type": "integer",
+      "minimum": 12285,
+      "maximum": 1490400,
+      "output": "fnlwgt.cpp"
+    },
+    {
+      "column": "education",
+      "description": "Census Income column education",
+      "type": "list",
+      "values": [
+        "10th",
+        "11th",
+        "12th",
+        "1st-4th",
+        "5th-6th",
+        "7th-8th",
+        "9th",
+        "Assoc-acdm",
+        "Assoc-voc",
+        "Bachelors",
+        "Doctorate",
+        "HS-grad",
+        "Masters",
+        "Preschool",
+        "Prof-school",
+        "Some-college"
+      ],
+      "output": "education.cpp"
+    },
+    {
+      "column": "education-num",
+      "description": "Census Income column education-num",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16,
+      "output": "education-num.cpp"
+    },
+    {
+      "column": "marital-status",
+      "description": "Census Income column marital-status",
+      "type": "list",
+      "values": [
+        "Divorced",
+        "Married-AF-spouse",
+        "Married-civ-spouse",
+        "Married-spouse-absent",
+        "Never-married",
+        "Separated",
+        "Widowed"
+      ],
+      "output": "marital-status.cpp"
+    },
+    {
+      "column": "occupation",
+      "description": "Census Income column occupation",
+      "type": "list",
+      "values": [
+        "",
+        "?",
+        "Adm-clerical",
+        "Armed-Forces",
+        "Craft-repair",
+        "Exec-managerial",
+        "Farming-fishing",
+        "Handlers-cleaners",
+        "Machine-op-inspct",
+        "Other-service",
+        "Priv-house-serv",
+        "Prof-specialty",
+        "Protective-serv",
+        "Sales",
+        "Tech-support",
+        "Transport-moving"
+      ],
+      "output": "occupation.cpp"
+    },
+    {
+      "column": "relationship",
+      "description": "Census Income column relationship",
+      "type": "list",
+      "values": [
+        "Husband",
+        "Not-in-family",
+        "Other-relative",
+        "Own-child",
+        "Unmarried",
+        "Wife"
+      ],
+      "output": "relationship.cpp"
+    },
+    {
+      "column": "race",
+      "description": "Census Income column race",
+      "type": "list",
+      "values": [
+        "Amer-Indian-Eskimo",
+        "Asian-Pac-Islander",
+        "Black",
+        "Other",
+        "White"
+      ],
+      "output": "race.cpp"
+    },
+    {
+      "column": "sex",
+      "description": "Census Income column sex",
+      "type": "list",
+      "values": [
+        "Female",
+        "Male"
+      ],
+      "output": "sex.cpp"
+    },
+    {
+      "column": "capital-gain",
+      "description": "Census Income column capital-gain",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99999,
+      "output": "capital-gain.cpp"
+    },
+    {
+      "column": "capital-loss",
+      "description": "Census Income column capital-loss",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4356,
+      "output": "capital-loss.cpp"
+    },
+    {
+      "column": "hours-per-week",
+      "description": "Census Income column hours-per-week",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99,
+      "output": "hours-per-week.cpp"
+    },
+    {
+      "column": "native-country",
+      "description": "Census Income column native-country",
+      "type": "list",
+      "values": [
+        "",
+        "?",
+        "Cambodia",
+        "Canada",
+        "China",
+        "Columbia",
+        "Cuba",
+        "Dominican-Republic",
+        "Ecuador",
+        "El-Salvador",
+        "England",
+        "France",
+        "Germany",
+        "Greece",
+        "Guatemala",
+        "Haiti",
+        "Holand-Netherlands",
+        "Honduras",
+        "Hong",
+        "Hungary",
+        "India",
+        "Iran",
+        "Ireland",
+        "Italy",
+        "Jamaica",
+        "Japan",
+        "Laos",
+        "Mexico",
+        "Nicaragua",
+        "Outlying-US(Guam-USVI-etc)",
+        "Peru",
+        "Philippines",
+        "Poland",
+        "Portugal",
+        "Puerto-Rico",
+        "Scotland",
+        "South",
+        "Taiwan",
+        "Thailand",
+        "Trinadad&Tobago",
+        "United-States",
+        "Vietnam",
+        "Yugoslavia"
+      ],
+      "output": "native-country.cpp"
+    },
+    {
+      "column": "income",
+      "description": "Census Income column income",
+      "type": "list",
+      "values": [
+        "<=50K",
+        "<=50K.",
+        ">50K",
+        ">50K."
+      ],
+      "output": "income.cpp"
+    }
+  ]
+}

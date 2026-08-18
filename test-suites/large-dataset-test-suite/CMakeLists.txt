@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.20)
+project(large_dataset_test_suite LANGUAGES CXX)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+foreach(configuration Debug Release RelWithDebInfo MinSizeRel)
+  string(TOUPPER ${configuration} configuration_upper)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${configuration_upper} ${CMAKE_BINARY_DIR})
+endforeach()
+set(GAMMAMAX_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources/gammamax")
+add_subdirectory(${GAMMAMAX_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/gammamax-build)
+set(ADULT_COLUMNS age workclass fnlwgt education education-num marital-status
+  occupation relationship race sex capital-gain capital-loss hours-per-week
+  native-country income)
+foreach(column IN LISTS ADULT_COLUMNS)
+  string(REPLACE "-" "_" target_column "${column}")
+  add_executable(oracle_${target_column} "oracles/adult_20/${column}.cpp")
+  set_target_properties(oracle_${target_column} PROPERTIES OUTPUT_NAME "oracle_${column}")
+  target_compile_features(oracle_${target_column} PRIVATE cxx_std_20)
+endforeach()
