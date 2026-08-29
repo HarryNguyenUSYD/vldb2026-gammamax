@@ -12,7 +12,9 @@ from pathlib import Path
 
 BENCHMARK = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BENCHMARK))
-from benchmark_common import load_case, metrics, sample_rows, save_result  # noqa: E402
+from benchmark_common import (  # noqa: E402
+    load_case, metrics, run_with_elapsed_timer, sample_rows, save_result,
+)
 
 
 def oracle_path(root: Path, column: str) -> Path:
@@ -102,4 +104,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(run_with_elapsed_timer(main))

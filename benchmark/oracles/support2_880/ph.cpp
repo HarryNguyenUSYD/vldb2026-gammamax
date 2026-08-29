@@ -2,93 +2,20 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <unordered_set>
+#include <charconv>
+#include <cmath>
 
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
-    static const std::unordered_set<std::string> allowed{
-        "",
-        "6.829102",
-        "6.90918",
-        "6.919922",
-        "6.929688",
-        "6.939453",
-        "6.959961",
-        "6.969727",
-        "6.989258",
-        "7.019531",
-        "7.029297",
-        "7.05957",
-        "7.069336",
-        "7.079102",
-        "7.089844",
-        "7.099609",
-        "7.109375",
-        "7.119141",
-        "7.129883",
-        "7.139648",
-        "7.149414",
-        "7.15918",
-        "7.169922",
-        "7.179688",
-        "7.189453",
-        "7.199219",
-        "7.209961",
-        "7.219727",
-        "7.229492",
-        "7.239258",
-        "7.25",
-        "7.259766",
-        "7.269531",
-        "7.279297",
-        "7.289062",
-        "7.299805",
-        "7.30957",
-        "7.319336",
-        "7.329102",
-        "7.339844",
-        "7.349609",
-        "7.359375",
-        "7.369141",
-        "7.379883",
-        "7.389648",
-        "7.399414",
-        "7.40918",
-        "7.419922",
-        "7.429688",
-        "7.439453",
-        "7.449219",
-        "7.459961",
-        "7.469727",
-        "7.479492",
-        "7.489258",
-        "7.5",
-        "7.509766",
-        "7.519531",
-        "7.529297",
-        "7.539062",
-        "7.549805",
-        "7.55957",
-        "7.569336",
-        "7.579102",
-        "7.589844",
-        "7.599609",
-        "7.609375",
-        "7.619141",
-        "7.629883",
-        "7.639648",
-        "7.649414",
-        "7.65918",
-        "7.669922",
-        "7.679688",
-        "7.699219",
-        "7.709961",
-        "7.719727",
-        "7.769531"
-    };
-    return allowed.contains(value);
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
+    double parsed{};
+    const char* const begin = value.data();
+    const char* const end = begin + value.size();
+    const auto result = std::from_chars(begin, end, parsed, std::chars_format::general);
+    if (value.empty() || result.ec != std::errc{} || result.ptr != end ||
+        !std::isfinite(parsed)) return false;
+    return parsed >= 0x1.b51001d5c3159p+2 && parsed <= 0x1.f13ffef39085fp+2;
 }
 
 }  // namespace

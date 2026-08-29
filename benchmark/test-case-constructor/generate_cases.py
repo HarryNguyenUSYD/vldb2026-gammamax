@@ -23,13 +23,13 @@ def predicate(spec: dict[str, Any]) -> Callable[[str], bool]:
     kind = spec.get("type")
     if kind == "list":
         allowed = set(spec["values"])
-        return lambda value: "#" not in value and value in allowed
+        return lambda value: value not in ("", "?") and "#" not in value and value in allowed
     if kind == "integer":
         minimum, maximum = int(spec["minimum"]), int(spec["maximum"])
 
         def accepts_integer(value: str) -> bool:
             try:
-                return "#" not in value and value.strip() == value and minimum <= int(value, 10) <= maximum
+                return value not in ("", "?") and "#" not in value and value.strip() == value and minimum <= int(value, 10) <= maximum
             except ValueError:
                 return False
 
@@ -40,14 +40,14 @@ def predicate(spec: dict[str, Any]) -> Callable[[str], bool]:
         def accepts_real(value: str) -> bool:
             try:
                 parsed = float(value)
-                return "#" not in value and value.strip() == value and math.isfinite(parsed) and minimum <= parsed <= maximum
+                return value not in ("", "?") and "#" not in value and value.strip() == value and math.isfinite(parsed) and minimum <= parsed <= maximum
             except ValueError:
                 return False
 
         return accepts_real
     if kind == "regex":
         expression = re.compile(spec["regex"])
-        return lambda value: "#" not in value and expression.fullmatch(value) is not None
+        return lambda value: value not in ("", "?") and "#" not in value and expression.fullmatch(value) is not None
     raise ValueError(
         f"unsupported oracle type for {spec.get('column', '<unknown>')!r}: {kind!r}"
     )

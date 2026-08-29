@@ -16,8 +16,6 @@
       "description": "Census Income column workclass",
       "type": "list",
       "values": [
-        "",
-        "?",
         "Federal-gov",
         "Local-gov",
         "Never-worked",
@@ -89,8 +87,6 @@
       "description": "Census Income column occupation",
       "type": "list",
       "values": [
-        "",
-        "?",
         "Adm-clerical",
         "Armed-Forces",
         "Craft-repair",
@@ -174,8 +170,6 @@
       "description": "Census Income column native-country",
       "type": "list",
       "values": [
-        "",
-        "?",
         "Cambodia",
         "Canada",
         "China",

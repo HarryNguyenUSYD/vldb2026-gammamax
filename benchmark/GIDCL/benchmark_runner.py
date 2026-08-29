@@ -11,8 +11,8 @@ from pathlib import Path
 BENCHMARK = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BENCHMARK))
 from benchmark_common import (  # noqa: E402
-    detected_cells, load_case, metrics, openai_json, sample_rows, save_result,
-    validator,
+    detected_cells, load_case, metrics, openai_json, run_with_elapsed_timer,
+    sample_rows, save_result, validator,
 )
 
 
@@ -86,4 +86,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(run_with_elapsed_timer(main))

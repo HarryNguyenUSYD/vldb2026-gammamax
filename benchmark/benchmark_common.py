@@ -9,10 +9,41 @@ import math
 import os
 import random
 import re
+import sys
+import threading
+import time
 from pathlib import Path
 from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parent
+
+
+def run_with_elapsed_timer(action: Callable[[], int]) -> int:
+    """Run an action while displaying a non-limiting elapsed-time counter."""
+    stopped = threading.Event()
+    started = time.monotonic()
+
+    def display() -> None:
+        while not stopped.is_set():
+            elapsed = int(time.monotonic() - started)
+            hours, remainder = divmod(elapsed, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            print(
+                f"\rElapsed time: {hours:02d}:{minutes:02d}:{seconds:02d}",
+                end="",
+                file=sys.stderr,
+                flush=True,
+            )
+            stopped.wait(1)
+
+    counter = threading.Thread(target=display, daemon=True)
+    counter.start()
+    try:
+        return action()
+    finally:
+        stopped.set()
+        counter.join()
+        print(file=sys.stderr, flush=True)
 
 
 def read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
@@ -33,16 +64,16 @@ def validator(spec: dict[str, Any]) -> Callable[[str], bool]:
     kind = spec["type"]
     if kind == "list":
         values = set(map(str, spec["values"]))
-        return lambda value: "#" not in value and value in values
+        return lambda value: value not in ("", "?") and "#" not in value and value in values
     if kind == "regex":
         expression = re.compile(spec["regex"])
-        return lambda value: "#" not in value and expression.fullmatch(value) is not None
+        return lambda value: value not in ("", "?") and "#" not in value and expression.fullmatch(value) is not None
     if kind == "integer":
         low, high = int(spec["minimum"]), int(spec["maximum"])
 
         def valid_integer(value: str) -> bool:
             try:
-                return "#" not in value and value.strip() == value and low <= int(value) <= high
+                return value not in ("", "?") and "#" not in value and value.strip() == value and low <= int(value) <= high
             except ValueError:
                 return False
 
@@ -53,7 +84,7 @@ def validator(spec: dict[str, Any]) -> Callable[[str], bool]:
         def valid_real(value: str) -> bool:
             try:
                 number = float(value)
-                return "#" not in value and value.strip() == value and math.isfinite(number) and low <= number <= high
+                return value not in ("", "?") and "#" not in value and value.strip() == value and math.isfinite(number) and low <= number <= high
             except ValueError:
                 return False
 
@@ -133,14 +164,20 @@ def metrics(
     corrupted: list[dict[str, str]],
     repaired: list[dict[str, str]],
 ) -> dict[str, Any]:
-    errors = changed = correct = 0
+    errors = changed = correct = exact_cells = exact_rows = 0
+    total_cells = sum(len(row) for row in original)
     for clean, dirty, output in zip(original, corrupted, repaired):
+        row_exact = True
         for column in clean:
             was_error = clean[column] != dirty[column]
             was_changed = output[column] != dirty[column]
             errors += was_error
             changed += was_changed
             correct += was_error and output[column] == clean[column]
+            is_exact = output[column] == clean[column]
+            exact_cells += is_exact
+            row_exact = row_exact and is_exact
+        exact_rows += row_exact
     precision = correct / changed if changed else 0.0
     recall = correct / errors if errors else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
@@ -148,6 +185,12 @@ def metrics(
         "error_cells": errors,
         "changed_cells": changed,
         "correct_repairs": correct,
+        "exact_repair_matches": correct,
+        "exact_repair_match_rate": correct / errors if errors else 1.0,
+        "exact_match_cells": exact_cells,
+        "exact_match_cell_rate": exact_cells / total_cells if total_cells else 1.0,
+        "exact_match_rows": exact_rows,
+        "exact_match_row_rate": exact_rows / len(original) if original else 1.0,
         "precision": precision,
         "recall": recall,
         "f1": f1,

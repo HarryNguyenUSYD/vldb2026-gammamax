@@ -2,76 +2,20 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <unordered_set>
+#include <charconv>
+#include <cmath>
 
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
-    static const std::unordered_set<std::string> allowed{
-        "",
-        "0.3999634",
-        "0.5",
-        "0.5999756",
-        "0.7999268",
-        "0.8999023",
-        "1.0",
-        "1.0998535",
-        "1.1999512",
-        "1.2998047",
-        "1.3999023",
-        "1.5",
-        "1.5998535",
-        "1.6999512",
-        "1.7998047",
-        "1.8999023",
-        "10.8984375",
-        "2.0",
-        "2.0996094",
-        "2.1396484",
-        "2.199707",
-        "2.2998047",
-        "2.3999023",
-        "2.5",
-        "2.5996094",
-        "2.699707",
-        "2.7299805",
-        "2.7998047",
-        "2.8999023",
-        "29.0",
-        "3.0",
-        "3.0996094",
-        "3.199707",
-        "3.2998047",
-        "3.3999023",
-        "3.4399414",
-        "3.449707",
-        "3.5996094",
-        "3.699707",
-        "3.7998047",
-        "3.8999023",
-        "4.0",
-        "4.0996094",
-        "4.1992188",
-        "4.2998047",
-        "4.3994141",
-        "4.5",
-        "4.5996094",
-        "4.6992188",
-        "4.7998047",
-        "4.8994141",
-        "5.0",
-        "5.0996094",
-        "5.1992188",
-        "5.5",
-        "5.5996094",
-        "5.6992188",
-        "5.7998047",
-        "6.0",
-        "6.2998047",
-        "8.5996094"
-    };
-    return allowed.contains(value);
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
+    double parsed{};
+    const char* const begin = value.data();
+    const char* const end = begin + value.size();
+    const auto result = std::from_chars(begin, end, parsed, std::chars_format::general);
+    if (value.empty() || result.ec != std::errc{} || result.ptr != end ||
+        !std::isfinite(parsed)) return false;
+    return parsed >= 0x1.9990016a634b3p-2 && parsed <= 0x1.d000000000000p+4;
 }
 
 }  // namespace

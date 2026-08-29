@@ -71,7 +71,7 @@ def program(predicate_includes: str, predicate_body: str) -> str:
 namespace {{
 
 bool accepts(const std::string& value) {{
-    if (value.find('#') != std::string::npos) return false;
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
 {predicate_body}
 }}
 
@@ -233,7 +233,9 @@ def generate_manifest(manifest: Path, output_dir: Path) -> int:
 
     output_dir.mkdir(parents=True, exist_ok=True)
     for destination, source in generated:
-        destination.write_text(source, encoding="utf-8", newline="\n")
+        # `newline` is not accepted by pathlib.Path.write_text on older Python
+        # versions. `source` is constructed with explicit `\n` line endings.
+        destination.write_text(source, encoding="utf-8")
     return len(generated)
 
 

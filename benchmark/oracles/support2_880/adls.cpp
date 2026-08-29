@@ -2,24 +2,20 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <unordered_set>
+#include <charconv>
+#include <cmath>
 
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
-    static const std::unordered_set<std::string> allowed{
-        "",
-        "0.0",
-        "1.0",
-        "2.0",
-        "3.0",
-        "4.0",
-        "5.0",
-        "6.0",
-        "7.0"
-    };
-    return allowed.contains(value);
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
+    double parsed{};
+    const char* const begin = value.data();
+    const char* const end = begin + value.size();
+    const auto result = std::from_chars(begin, end, parsed, std::chars_format::general);
+    if (value.empty() || result.ec != std::errc{} || result.ptr != end ||
+        !std::isfinite(parsed)) return false;
+    return parsed >= 0x0.0p+0 && parsed <= 0x1.c000000000000p+2;
 }
 
 }  // namespace

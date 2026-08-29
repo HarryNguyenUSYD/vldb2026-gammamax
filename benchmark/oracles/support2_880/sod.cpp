@@ -2,76 +2,20 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <unordered_set>
+#include <charconv>
+#include <cmath>
 
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
-    static const std::unordered_set<std::string> allowed{
-        "",
-        "110.0",
-        "111.0",
-        "112.0",
-        "113.0",
-        "114.0",
-        "115.0",
-        "116.0",
-        "117.0",
-        "118.0",
-        "119.0",
-        "120.0",
-        "121.0",
-        "122.0",
-        "123.0",
-        "124.0",
-        "125.0",
-        "126.0",
-        "127.0",
-        "128.0",
-        "129.0",
-        "130.0",
-        "131.0",
-        "132.0",
-        "133.0",
-        "134.0",
-        "135.0",
-        "136.0",
-        "137.0",
-        "138.0",
-        "139.0",
-        "140.0",
-        "141.0",
-        "142.0",
-        "143.0",
-        "144.0",
-        "145.0",
-        "146.0",
-        "147.0",
-        "148.0",
-        "149.0",
-        "150.0",
-        "151.0",
-        "152.0",
-        "153.0",
-        "154.0",
-        "155.0",
-        "156.0",
-        "157.0",
-        "158.0",
-        "160.0",
-        "161.0",
-        "162.0",
-        "163.0",
-        "164.0",
-        "165.0",
-        "166.0",
-        "168.0",
-        "173.0",
-        "175.0",
-        "181.0"
-    };
-    return allowed.contains(value);
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
+    double parsed{};
+    const char* const begin = value.data();
+    const char* const end = begin + value.size();
+    const auto result = std::from_chars(begin, end, parsed, std::chars_format::general);
+    if (value.empty() || result.ec != std::errc{} || result.ptr != end ||
+        !std::isfinite(parsed)) return false;
+    return parsed >= 0x1.b800000000000p+6 && parsed <= 0x1.6a00000000000p+7;
 }
 
 }  // namespace

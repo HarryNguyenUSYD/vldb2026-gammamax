@@ -9,7 +9,8 @@ Files produced at runtime are described at the end.
 - `Makefile`: generates test data; builds GammaMax and column oracles; runs
   GammaMax, ZeroEC, GIDCL, their smoke tests, or the complete suite.
 - `benchmark_common.py`: shared CSV loading, oracle predicates, deterministic
-  smoke sampling, OpenAI JSON calls, metrics, and result writing.
+  smoke sampling, OpenAI JSON calls, precision/recall/F1 and exact-match
+  metrics, and result writing.
 - `environment-macos.yml`: shared macOS Conda environment containing Python,
   OpenAI client, Make, CMake, and a C++ compiler.
 - `MACOS_CONDA.md`: step-by-step environment, session credential, smoke, and
@@ -273,4 +274,5 @@ These are absent until commands run and should not be treated as source:
 - `build/oracles/<dataset>/`: compiled per-column oracle executables.
 - `results/<algorithm>/<dataset>/<full|smoke>/repaired.csv`: repaired table.
 - `results/<algorithm>/<dataset>/<full|smoke>/metrics.json`: common precision,
-  recall, F1, counts, sampling metadata, and algorithm-specific diagnostics.
+  recall, F1, cell/repair/row exact-match metrics, counts, sampling metadata,
+  and algorithm-specific diagnostics.

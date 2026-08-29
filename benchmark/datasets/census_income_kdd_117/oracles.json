@@ -289,7 +289,6 @@
       "description": "Census-Income (KDD) column GRINST",
       "type": "list",
       "values": [
-        "",
         " Abroad",
         " Alabama",
         " Alaska",
@@ -418,7 +417,6 @@
       "description": "Census-Income (KDD) column MIGMTR1",
       "type": "list",
       "values": [
-        "",
         " Abroad to MSA",
         " Abroad to nonMSA",
         " MSA to MSA",
@@ -436,7 +434,6 @@
       "description": "Census-Income (KDD) column MIGMTR3",
       "type": "list",
       "values": [
-        "",
         " Abroad",
         " Different county same state",
         " Different division same region",
@@ -453,7 +450,6 @@
       "description": "Census-Income (KDD) column MIGMTR4",
       "type": "list",
       "values": [
-        "",
         " Abroad",
         " Different county same state",
         " Different state in Midwest",
@@ -482,7 +478,6 @@
       "description": "Census-Income (KDD) column MIGSUN",
       "type": "list",
       "values": [
-        "",
         " No",
         " Not in universe",
         " Yes"
@@ -515,7 +510,6 @@
       "description": "Census-Income (KDD) column PEFNTVTY",
       "type": "list",
       "values": [
-        "",
         " Cambodia",
         " Canada",
         " China",
@@ -566,7 +560,6 @@
       "description": "Census-Income (KDD) column PEMNTVTY",
       "type": "list",
       "values": [
-        "",
         " Cambodia",
         " Canada",
         " China",
@@ -617,7 +610,6 @@
       "description": "Census-Income (KDD) column PENATVTY",
       "type": "list",
       "values": [
-        "",
         " Cambodia",
         " Canada",
         " China",

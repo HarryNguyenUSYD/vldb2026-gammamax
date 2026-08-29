@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parent
 DATASETS = ROOT / "datasets"
 ORACLES = ROOT / "oracles"
 MAX_LIST_VALUES = 2048
+INVALID_VALUES = {"", "?"}
 
 
 def numeric(text: str) -> tuple[bool, int | float]:
@@ -51,21 +52,27 @@ def infer(dataset: str, column: str, values: list[str], display_name: str) -> di
     all_integer = all_numeric and all(isinstance(value, int) for _, value in parsed)
     description = f"{display_name} column {column}"
 
-    if all_integer and not has_empty:
+    if all_integer:
         numbers = [value for _, value in parsed]
         return {
             "column": column, "description": description, "type": "integer",
             "minimum": min(numbers), "maximum": max(numbers), "output": f"{column}.cpp",
         }
-    if all_numeric and not has_empty:
+    if all_numeric:
         numbers = [float(value) for _, value in parsed]
         return {
             "column": column, "description": description, "type": "real",
             "minimum": min(numbers), "maximum": max(numbers), "output": f"{column}.cpp",
         }
 
-    unique = sorted(set(values))
+    unique = sorted(set(values) - INVALID_VALUES)
     if len(unique) <= MAX_LIST_VALUES:
+        if not unique:
+            return {
+                "column": column, "description": description, "type": "regex",
+                "regex": r"(?!)", "observed_distinct_values": 0,
+                "output": f"{column}.cpp",
+            }
         return {
             "column": column, "description": description, "type": "list",
             "values": unique, "output": f"{column}.cpp",
@@ -73,8 +80,8 @@ def infer(dataset: str, column: str, values: list[str], display_name: str) -> di
 
     if all_numeric:
         expression = (
-            r"^(|[-+]?\d+)$" if all_integer else
-            r"^(|[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)$"
+            r"^[-+]?\d+$" if all_integer else
+            r"^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?$"
         )
     else:
         lengths = [len(value) for value in nonempty]
@@ -84,7 +91,7 @@ def infer(dataset: str, column: str, values: list[str], display_name: str) -> di
             body = f"[{character_class}]{{{min(lengths)},{max(lengths)}}}"
         except ValueError:
             body = f"[^#\\r\\n]{{{min(lengths)},{max(lengths)}}}"
-        expression = f"^(?:|{body})$" if has_empty else f"^{body}$"
+        expression = f"^{body}$"
     return {
         "column": column, "description": description, "type": "regex",
         "regex": expression, "observed_distinct_values": len(unique),
@@ -175,7 +182,7 @@ def main() -> int:
     names = args.datasets or sorted(path.name for path in DATASETS.iterdir() if path.is_dir())
     domain_lines = [
         "# Benchmark dataset columns", "",
-        "Domains are inferred from current clean CSV files. Closed lists contain all observed categorical values; numeric ranges contain observed extrema. No generated regex accepts every string.", "",
+        "Domains are inferred from current clean CSV files. Empty string and literal `?` are always invalid and excluded from every oracle. Closed lists contain remaining observed categorical values; numeric ranges contain observed extrema. No generated regex accepts every string.", "",
     ]
     for name in names:
         directory = DATASETS / name

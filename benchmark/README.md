@@ -52,6 +52,8 @@ under `oracle_scan` in the output JSON. The oracle-call limit must be large
 enough for the complete scan and subsequent repair-candidate queries.
 All benchmark oracles reserve and reject `#`, the generator's insertion and
 substitution marker. Make targets regenerate C++ oracles before compiling them.
+Empty string and literal `?` are also globally rejected, even when present as
+missing-value markers in a clean source table.
 
 ## Running algorithms
 
@@ -90,6 +92,10 @@ results/<algorithm>/<dataset>/<full-or-smoke>/
 ├── repaired.csv
 └── metrics.json
 ```
+
+`metrics.json` includes exact repair matches/rate, exact clean-table cell
+matches/rate, and exact clean-table row matches/rate in addition to precision,
+recall, and F1.
 
 ### Smoke tests
 

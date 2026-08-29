@@ -9,7 +9,7 @@
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
     std::int64_t parsed{};
     const char* begin = value.data();
     const char* const end = begin + value.size();

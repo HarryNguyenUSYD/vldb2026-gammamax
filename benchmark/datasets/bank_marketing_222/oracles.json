@@ -16,7 +16,6 @@
       "description": "Bank Marketing column job",
       "type": "list",
       "values": [
-        "",
         "admin.",
         "blue-collar",
         "entrepreneur",
@@ -47,7 +46,6 @@
       "description": "Bank Marketing column education",
       "type": "list",
       "values": [
-        "",
         "primary",
         "secondary",
         "tertiary"
@@ -97,7 +95,6 @@
       "description": "Bank Marketing column contact",
       "type": "list",
       "values": [
-        "",
         "cellular",
         "telephone"
       ],
@@ -168,7 +165,6 @@
       "description": "Bank Marketing column poutcome",
       "type": "list",
       "values": [
-        "",
         "failure",
         "other",
         "success"

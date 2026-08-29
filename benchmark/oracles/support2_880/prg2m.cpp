@@ -2,67 +2,20 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <unordered_set>
+#include <charconv>
+#include <cmath>
 
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
-    static const std::unordered_set<std::string> allowed{
-        "",
-        "0.0",
-        "0.009999998",
-        "0.019999996",
-        "0.029999986",
-        "0.039999992",
-        "0.049999982",
-        "0.059999973",
-        "0.069999993",
-        "0.079999983",
-        "0.089999974",
-        "0.099999964",
-        "0.149999976",
-        "0.189999938",
-        "0.199999928",
-        "0.23999989",
-        "0.25",
-        "0.299999952",
-        "0.329999924",
-        "0.349999905",
-        "0.369999886",
-        "0.389999866",
-        "0.399999857",
-        "0.449999809",
-        "0.489999771",
-        "0.5",
-        "0.509999752",
-        "0.529999733",
-        "0.549999714",
-        "0.599999905",
-        "0.649999619",
-        "0.669999599",
-        "0.699999809",
-        "0.75",
-        "0.759999752",
-        "0.769999981",
-        "0.779999733",
-        "0.789999962",
-        "0.799999714",
-        "0.829999924",
-        "0.849999905",
-        "0.879999638",
-        "0.899999619",
-        "0.909999847",
-        "0.919999599",
-        "0.929999828",
-        "0.949999809",
-        "0.959999561",
-        "0.96999979",
-        "0.979999542",
-        "0.989999771",
-        "1.0"
-    };
-    return allowed.contains(value);
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
+    double parsed{};
+    const char* const begin = value.data();
+    const char* const end = begin + value.size();
+    const auto result = std::from_chars(begin, end, parsed, std::chars_format::general);
+    if (value.empty() || result.ec != std::errc{} || result.ptr != end ||
+        !std::isfinite(parsed)) return false;
+    return parsed >= 0x0.0p+0 && parsed <= 0x1.0000000000000p+0;
 }
 
 }  // namespace

@@ -7,7 +7,7 @@
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
     static const std::unordered_set<std::string> allowed{
         " 50000+.",
         "-50000"

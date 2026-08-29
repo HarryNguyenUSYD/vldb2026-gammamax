@@ -2,15 +2,20 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <regex>
+#include <charconv>
+#include <cmath>
 
 namespace {
 
 bool accepts(const std::string& value) {
-    if (value.find('#') != std::string::npos) return false;
-    static const std::regex expression(
-        "^(|[-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][-+]?\\d+)?)$", std::regex::ECMAScript);
-    return std::regex_match(value, expression);
+    if (value.empty() || value == "?" || value.find('#') != std::string::npos) return false;
+    double parsed{};
+    const char* const begin = value.data();
+    const char* const end = begin + value.size();
+    const auto result = std::from_chars(begin, end, parsed, std::chars_format::general);
+    if (value.empty() || result.ec != std::errc{} || result.ptr != end ||
+        !std::isfinite(parsed)) return false;
+    return parsed >= -0x1.9ae13fd0d0679p+6 && parsed <= 0x1.5b03400000000p+19;
 }
 
 }  // namespace
