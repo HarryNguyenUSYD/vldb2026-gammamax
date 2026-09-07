@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "max_positive_examples_stored": 521,
+  "max_negative_examples_stored": 16895,
+  "datasets": {
+    "generated-50/adult_20/benchmark.json": {
+      "max_positive_examples_stored": 521,
+      "max_negative_examples_stored": 4051
+    },
+    "generated-50/bank_marketing_222/benchmark.json": {
+      "max_positive_examples_stored": 421,
+      "max_negative_examples_stored": 1334
+    },
+    "generated-90/adult_20/benchmark.json": {
+      "max_positive_examples_stored": 104,
+      "max_negative_examples_stored": 10469
+    },
+    "generated-90/bank_marketing_222/benchmark.json": {
+      "max_positive_examples_stored": 104,
+      "max_negative_examples_stored": 1766
+    },
+    "generated-90/census_income_kdd_117/benchmark.json": {
+      "max_positive_examples_stored": 107,
+      "max_negative_examples_stored": 16895
+    },
+    "generated-90/support2_880/benchmark.json": {
+      "max_positive_examples_stored": 108,
+      "max_negative_examples_stored": 3849
+    },
+    "generated-smoke/adult_20/benchmark.json": {
+      "max_positive_examples_stored": 43,
+      "max_negative_examples_stored": 466
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "column": "native-country",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "China",
+    "Haiti",
+    "Philippines",
+    "Puerto-Rico",
+    "United-States",
+    "Vietnam"
+  ]
+}

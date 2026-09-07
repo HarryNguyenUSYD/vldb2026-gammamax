@@ -1,0 +1,13 @@
+{
+  "column": "ARACE",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Amer Indian Aleut or Eskimo",
+    " Asian or Pacific Islander",
+    " Black",
+    " Other",
+    " White"
+  ]
+}

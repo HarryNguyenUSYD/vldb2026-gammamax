@@ -1,0 +1,45 @@
+test_imputation_configuration_bounds_and_types (test_suite.ConfigurationTests) ... ok
+test_repository_config_is_algorithm_only_and_valid (test_suite.ConfigurationTests) ... ok
+In file included from /Users/hoang/VRI/vldb-gammamax-dt/algorithm/src/main.cpp:4:
+/Users/hoang/VRI/vldb-gammamax-dt/algorithm/include/gammamax/numeric_candidates.hpp:72:23: error: call to deleted function 'from_chars'
+   72 |         auto parsed = std::from_chars(candidate.data(), candidate.data() + candidate.size(), number);
+      |                       ^~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__charconv/from_chars_integral.h:38:19: note: candidate function has been explicitly deleted
+   38 | from_chars_result from_chars(const char*, const char*, bool, int = 10) = delete;
+      |                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__charconv/from_chars_floating_point.h:58:1: note: candidate function not viable: no known conversion from 'long double' to 'float &' for 3rd argument
+   58 | from_chars(const char* __first, const char* __last, float& __value, chars_format __fmt = chars_format::general) {
+      | ^                                                   ~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__charconv/from_chars_floating_point.h:63:1: note: candidate function not viable: no known conversion from 'long double' to 'double &' for 3rd argument
+   63 | from_chars(const char* __first, const char* __last, double& __value, chars_format __fmt = chars_format::general) {
+      | ^                                                   ~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__charconv/from_chars_integral.h:224:1: note: candidate template ignored: requirement 'is_integral<long double>::value' was not satisfied [with _Tp = long double]
+  224 | from_chars(const char* __first, const char* __last, _Tp& __value) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__charconv/from_chars_integral.h:230:1: note: candidate function template not viable: requires 4 arguments, but 3 were provided
+  230 | from_chars(const char* __first, const char* __last, _Tp& __value, int __base) {
+      | ^          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+ERROR
+
+======================================================================
+ERROR: setUpClass (test_suite.PipelineTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hoang/VRI/vldb-gammamax-dt/tests/test_suite.py", line 56, in setUpClass
+    cls.binary = Path(os.environ["VLDB_ALGORITHM_BINARY"]) if os.getenv("VLDB_ALGORITHM_BINARY") else suite.build_algorithm()
+  File "/Users/hoang/VRI/vldb-gammamax-dt/vldb_suite.py", line 158, in build_algorithm
+    return cmake_build(HERE / "algorithm", HERE / "build" / "algorithm", "vldb_theory_algorithm")
+  File "/Users/hoang/VRI/vldb-gammamax-dt/vldb_suite.py", line 119, in cmake_build
+    return direct_build(source, build, target)
+  File "/Users/hoang/VRI/vldb-gammamax-dt/vldb_suite.py", line 153, in direct_build
+    subprocess.run(command, check=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['c++', '-std=c++20', '-O2', '/Users/hoang/VRI/vldb-gammamax-dt/algorithm/src/main.cpp', '-o', '/Users/hoang/VRI/vldb-gammamax-dt/build/algorithm/vldb_theory_algorithm', '-I', '/Users/hoang/VRI/vldb-gammamax-dt/algorithm/include', '-I', '/Users/hoang/VRI/vldb-gammamax-dt/algorithm/vendor']' returned non-zero exit status 1.
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.301s
+
+FAILED (errors=1)
+make: *** [python-test] Error 1

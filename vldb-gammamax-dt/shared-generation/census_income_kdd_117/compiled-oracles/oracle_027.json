@@ -1,0 +1,11 @@
+{
+  "column": "MIGSAME",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " No",
+    " Not in universe under 1 year old",
+    " Yes"
+  ]
+}

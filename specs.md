@@ -1,0 +1,35 @@
+The algorithm contains the following:
+
+- Input: a dirty dataset (a tabular dataset that contains a mix of clean and corrupted cells), a set of true/false oracles (one for each column), and a config file.
+- Output: a cleaned dataset.
+- Do the following steps:
+    - Scan every cell in the dataset with the oracles. Store two sets of strings - accepted vs rejected - for each column.
+    - For each column:
+        - Initialize an empty set of rejected strings S- that has a capacity of 100. If a rejected string would be found, add it into the set and remove the earliest one. 100 is a configurable number.
+        - Construct a DFA that accepts all accepted strings. If there are more than 200 accepted strings, pick 200 of them randomly and build the DFA on that. 200 is a configurable number. Merge states together following RPNI. Keep track of the merge history.
+        - Iterate over each rejected string, conducting a betaMax-like learning loop:
+            - Add the string to S-.
+            - Check if the current DFA accepts this string. If yes, revert the DFA and replay the merge history, but stop merging if the merge would cause any string in S- to be accepted. Then merge manually from there and store the new history.
+            - Once that is done, generate all lowest-edit-cost candidates using RSR.
+            - Select 1 candidate from those. 1 is a configurable number. The method of selection is random for now.
+            - Send that candidate to the oracle. If the oracle says yes, replace the dirty cell with the candidate, and move on to the next cell. If the oracle says no, add the candidate into S-, and repeat.
+        - The base DFA and merge history is stored across all string in a column.
+        - Each cell has a 60-second timeout. Other execution time does not count.
+- Notes:
+    - This algorithm is based on gammaMax, but without ktails, EDSM, or n-grams.
+    - The algorithm uses the RSR implementation of RSR in `gammamax-all-min`.
+    - Empty cells are ignored. The oracle count empty cells as accepted for now.
+- Test suite:
+    - Use the 4 datasets from `datasets`.
+    - There is a config file for the test generator, the same one is used to config the algorithm. However, the algorithm only takes its own config as input.
+    - Before constructing the test suite, generate an oracle for each of the columns in each dataset. There are 2 types of oracle:
+        - Exact enum values: a string is correct if it matches one of the enum values in the column.
+        - Exact format: represent the data in the column as a regex (such as dates, decimal numbers, etc.). Numerical values counts as regexes based on their number type and their length (for example, a column [23, 32, 54, 76] will count as a regex of `XX`, where X is any number 0-9. A column [0.21, 1.123, 21.121, 21.1] counts as a regex of `XX.XX`, where X is any number 0-9).
+        - Boolean values may be stored as 0/1. In that case, treat it as exact enum values 0 and 1. The same goes for enums stored as numbers in general.
+    - Create a program that generate a corrupted dataset from these base datasets. A corrupted dataset is a set of up to 1000 random rows from the base dataset, but with 50% of the cells randomly across the table corrupted. The corruption is a random insertion, deletion or substitution from 1 to 5 times. Keep both the 1000 random rows extracted from the base dataset and the corrupted dataset, each as its own csv file. 1000, 50%, 1, and 5 are configurable numbers.
+    - A test case is a corrupted dataset.
+    - After the test case is finished, scan the resulting dataset for accuracy. There are two types of correct:
+        - A cell is oracle correct if it is accepted by the oracle, no matter if its content matches the original.
+        - A cell is exact correct if it matches the original cell correctly.
+    - Tally up the accuracy for each column and the entire table.
+    - Report the accuracy, configs, timeout rate, and total execution time for each column and each table. Store these in a json file.

@@ -1,0 +1,10 @@
+{
+  "column": "income",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " 50000+.",
+    "-50000"
+  ]
+}

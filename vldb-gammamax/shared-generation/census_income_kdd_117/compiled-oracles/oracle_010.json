@@ -1,0 +1,17 @@
+{
+  "column": "AREORGN",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " All other",
+    " Central or South American",
+    " Cuban",
+    " Do not know",
+    " Mexican (Mexicano)",
+    " Mexican-American",
+    " NA",
+    " Other Spanish",
+    " Puerto Rican"
+  ]
+}

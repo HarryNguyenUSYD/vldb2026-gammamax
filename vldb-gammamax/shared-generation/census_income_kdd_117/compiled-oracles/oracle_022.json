@@ -1,0 +1,15 @@
+{
+  "column": "HHDREL",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Child 18 or older",
+    " Child under 18 never married",
+    " Group Quarters- Secondary individual",
+    " Householder",
+    " Nonrelative of householder",
+    " Other relative of householder",
+    " Spouse of householder"
+  ]
+}

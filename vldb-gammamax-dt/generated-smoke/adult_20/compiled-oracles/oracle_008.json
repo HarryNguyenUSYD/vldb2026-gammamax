@@ -1,0 +1,11 @@
+{
+  "column": "race",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "Asian-Pac-Islander",
+    "Black",
+    "White"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "column": "loan",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "no",
+    "yes"
+  ]
+}

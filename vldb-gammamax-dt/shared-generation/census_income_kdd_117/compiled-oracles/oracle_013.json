@@ -1,0 +1,14 @@
+{
+  "column": "AUNTYPE",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Job leaver",
+    " Job loser - on layoff",
+    " New entrant",
+    " Not in universe",
+    " Other job loser",
+    " Re-entrant"
+  ]
+}

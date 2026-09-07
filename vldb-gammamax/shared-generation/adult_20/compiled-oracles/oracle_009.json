@@ -1,0 +1,10 @@
+{
+  "column": "sex",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "Female",
+    "Male"
+  ]
+}

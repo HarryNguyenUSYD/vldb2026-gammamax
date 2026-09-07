@@ -1,0 +1,29 @@
+{
+  "seed": 0,
+  "imputation": {
+    "max_depth": 5,
+    "min_samples_leaf": 5,
+    "max_thresholds": 16,
+    "max_decimal_places": 6
+  },
+  "state_merging": {
+    "k": 5
+  },
+  "repair": {
+    "n": 4,
+    "ngrams_batch_size": 5,
+    "max_candidate_length": -1
+  },
+  "batching": {
+    "negative_capacity": -1,
+    "max_positive_examples": -1,
+    "cell_timeout_seconds": 60
+  },
+  "limits": {
+    "max_iterations": -1,
+    "max_total_oracle_calls": -1,
+    "max_states": -1,
+    "max_queue_size": -1,
+    "max_rsr_candidates": -1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "column": "MIGMTR4",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Abroad",
+    " Different county same state",
+    " Different state in Midwest",
+    " Different state in Northeast",
+    " Different state in South",
+    " Different state in West",
+    " Nonmover",
+    " Not in universe",
+    " Same county"
+  ]
+}

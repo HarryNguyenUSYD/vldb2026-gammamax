@@ -1,0 +1,30 @@
+{
+  "column": "AMJIND",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Agriculture",
+    " Business and repair services",
+    " Communications",
+    " Construction",
+    " Education",
+    " Entertainment",
+    " Finance insurance and real estate",
+    " Hospital services",
+    " Manufacturing-durable goods",
+    " Manufacturing-nondurable goods",
+    " Medical except hospital",
+    " Mining",
+    " Not in universe or children",
+    " Other professional services",
+    " Personal services except private HH",
+    " Private household services",
+    " Public administration",
+    " Retail trade",
+    " Social services",
+    " Transportation",
+    " Utilities and sanitary services",
+    " Wholesale trade"
+  ]
+}

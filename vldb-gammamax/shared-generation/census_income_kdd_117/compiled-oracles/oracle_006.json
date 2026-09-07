@@ -1,0 +1,15 @@
+{
+  "column": "AMARITL",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Divorced",
+    " Married-A F spouse present",
+    " Married-civilian spouse present",
+    " Married-spouse absent",
+    " Never married",
+    " Separated",
+    " Widowed"
+  ]
+}

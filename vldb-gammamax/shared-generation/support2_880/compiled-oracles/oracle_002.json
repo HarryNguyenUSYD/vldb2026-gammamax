@@ -1,0 +1,16 @@
+{
+  "column": "dzgroup",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "ARF/MOSF w/Sepsis",
+    "CHF",
+    "COPD",
+    "Cirrhosis",
+    "Colon Cancer",
+    "Coma",
+    "Lung Cancer",
+    "MOSF w/Malig"
+  ]
+}

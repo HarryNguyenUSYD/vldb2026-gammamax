@@ -1,0 +1,5 @@
+generated/
+build/
+__pycache__/
+*.pyc
+.venv/

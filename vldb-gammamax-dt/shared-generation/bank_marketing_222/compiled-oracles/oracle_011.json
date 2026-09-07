@@ -1,0 +1,13 @@
+{
+  "column": "duration",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "regex",
+  "regex": "^(?:\\d{1}|\\d{2}|\\d{3}|\\d{4})$",
+  "shapes": [
+    "\\d{1}",
+    "\\d{2}",
+    "\\d{3}",
+    "\\d{4}"
+  ]
+}

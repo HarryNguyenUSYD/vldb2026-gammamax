@@ -1,0 +1,22 @@
+{
+  "column": "AMJOCC",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Adm support including clerical",
+    " Executive admin and managerial",
+    " Farming forestry and fishing",
+    " Handlers equip cleaners etc ",
+    " Machine operators assmblrs & inspctrs",
+    " Not in universe",
+    " Other service",
+    " Precision production craft & repair",
+    " Private household services",
+    " Professional specialty",
+    " Protective services",
+    " Sales",
+    " Technicians and related support",
+    " Transportation and material moving"
+  ]
+}

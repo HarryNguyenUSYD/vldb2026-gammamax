@@ -1,0 +1,12 @@
+{
+  "column": "dzclass",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "ARF/MOSF",
+    "COPD/CHF/Cirrhosis",
+    "Cancer",
+    "Coma"
+  ]
+}

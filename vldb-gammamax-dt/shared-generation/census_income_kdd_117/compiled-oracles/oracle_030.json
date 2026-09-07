@@ -1,0 +1,13 @@
+{
+  "column": "PARENT",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Both parents present",
+    " Father only present",
+    " Mother only present",
+    " Neither parent present",
+    " Not in universe"
+  ]
+}

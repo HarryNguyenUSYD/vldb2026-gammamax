@@ -1,0 +1,11 @@
+{
+  "column": "AUNMEM",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " No",
+    " Not in universe",
+    " Yes"
+  ]
+}

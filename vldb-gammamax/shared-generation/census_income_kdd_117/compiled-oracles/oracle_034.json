@@ -1,0 +1,13 @@
+{
+  "column": "PRCITSHP",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Foreign born- Not a citizen of U S ",
+    " Foreign born- U S citizen by naturalization",
+    " Native- Born abroad of American Parent(s)",
+    " Native- Born in Puerto Rico or U S Outlying",
+    " Native- Born in the United States"
+  ]
+}

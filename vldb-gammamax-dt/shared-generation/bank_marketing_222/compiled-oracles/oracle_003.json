@@ -1,0 +1,11 @@
+{
+  "column": "education",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "primary",
+    "secondary",
+    "tertiary"
+  ]
+}

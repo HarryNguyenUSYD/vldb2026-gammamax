@@ -1,0 +1,13 @@
+{
+  "column": "sfdm2",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "<2 mo. follow-up",
+    "Coma or Intub",
+    "SIP>=30",
+    "adl>=4 (>=5 if sur)",
+    "no(M2 and SIP pres)"
+  ]
+}

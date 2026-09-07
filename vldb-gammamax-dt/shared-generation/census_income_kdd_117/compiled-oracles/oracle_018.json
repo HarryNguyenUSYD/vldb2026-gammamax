@@ -1,0 +1,14 @@
+{
+  "column": "FILESTAT",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Head of household",
+    " Joint both 65+",
+    " Joint both under 65",
+    " Joint one under 65 & one 65+",
+    " Nonfiler",
+    " Single"
+  ]
+}

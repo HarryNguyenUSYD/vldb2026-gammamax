@@ -1,0 +1,23 @@
+{
+  "adult_20": {
+    "categorical_columns": ["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country", "income"],
+    "integer_columns": ["age", "fnlwgt", "education-num", "capital-gain", "capital-loss", "hours-per-week"],
+    "float_columns": [], "allow_negative_columns": [], "id_columns": [], "date_columns": []
+  },
+  "bank_marketing_222": {
+    "categorical_columns": ["job", "marital", "education", "default", "housing", "loan", "contact", "month", "poutcome", "y"],
+    "integer_columns": ["age", "balance", "day_of_week", "duration", "campaign", "pdays", "previous"],
+    "float_columns": [], "allow_negative_columns": ["balance", "pdays"], "id_columns": [], "date_columns": []
+  },
+  "census_income_kdd_117": {
+    "categorical_columns": ["ACLSWKR", "AHGA", "AHSCOL", "AMARITL", "AMJIND", "AMJOCC", "ARACE", "AREORGN", "ASEX", "AUNMEM", "AUNTYPE", "AWKSTAT", "FILESTAT", "GRINREG", "GRINST", "HHDFMX", "HHDREL", "MIGMTR1", "MIGMTR3", "MIGMTR4", "MIGSAME", "MIGSUN", "PARENT", "PEFNTVTY", "PEMNTVTY", "PENATVTY", "PRCITSHP", "VETQVA", "income"],
+    "integer_columns": ["AAGE", "ADTINK", "ADTOCC", "CAPGAIN", "GAPLOSS", "DIVVAL", "NOEMP", "SEOTR", "VETYN", "WKSWORK", "AHRSPAY", "year"],
+    "float_columns": ["MARSUPWRT"], "allow_negative_columns": [], "id_columns": [], "date_columns": []
+  },
+  "support2_880": {
+    "categorical_columns": ["sex", "dzgroup", "dzclass", "income", "race", "ca", "dnr", "sfdm2"],
+    "integer_columns": ["num.co", "hday", "diabetes", "dementia", "death", "hospdead"],
+    "float_columns": ["age", "edu", "scoma", "charges", "totcst", "totmcst", "avtisst", "sps", "aps", "surv2m", "surv6m", "prg2m", "prg6m", "dnrday", "meanbp", "wblc", "hrt", "resp", "temp", "pafi", "alb", "bili", "crea", "sod", "ph", "glucose", "bun", "urine", "adlp", "adls", "adlsc"],
+    "allow_negative_columns": ["totmcst", "dnrday"], "id_columns": [], "date_columns": []
+  }
+}

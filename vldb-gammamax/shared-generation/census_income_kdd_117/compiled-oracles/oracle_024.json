@@ -1,0 +1,17 @@
+{
+  "column": "MIGMTR1",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Abroad to MSA",
+    " Abroad to nonMSA",
+    " MSA to MSA",
+    " MSA to nonMSA",
+    " NonMSA to MSA",
+    " NonMSA to nonMSA",
+    " Nonmover",
+    " Not identifiable",
+    " Not in universe"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "column": "marital-status",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "Divorced",
+    "Married-civ-spouse",
+    "Never-married",
+    "Separated",
+    "Widowed"
+  ]
+}

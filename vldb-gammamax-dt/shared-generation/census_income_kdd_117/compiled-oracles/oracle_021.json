@@ -1,0 +1,30 @@
+{
+  "column": "HHDFMX",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Child 18+ ever marr Not in a subfamily",
+    " Child 18+ ever marr RP of subfamily",
+    " Child 18+ never marr Not in a subfamily",
+    " Child 18+ never marr RP of subfamily",
+    " Child 18+ spouse of subfamily RP",
+    " Child <18 never marr not in subfamily",
+    " Child under 18 of RP of unrel subfamily",
+    " Grandchild 18+ never marr not in subfamily",
+    " Grandchild <18 never marr child of subfamily RP",
+    " Grandchild <18 never marr not in subfamily",
+    " Householder",
+    " In group quarters",
+    " Nonfamily householder",
+    " Other Rel 18+ ever marr RP of subfamily",
+    " Other Rel 18+ ever marr not in subfamily",
+    " Other Rel 18+ never marr not in subfamily",
+    " Other Rel 18+ spouse of subfamily RP",
+    " Other Rel <18 never marr child of subfamily RP",
+    " Other Rel <18 never marr not in subfamily",
+    " RP of unrelated subfamily",
+    " Secondary individual",
+    " Spouse of householder"
+  ]
+}

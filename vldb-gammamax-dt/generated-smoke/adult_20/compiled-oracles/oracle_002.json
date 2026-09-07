@@ -1,0 +1,11 @@
+{
+  "column": "fnlwgt",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "regex",
+  "regex": "^(?:\\d{5}|\\d{6})$",
+  "shapes": [
+    "\\d{5}",
+    "\\d{6}"
+  ]
+}

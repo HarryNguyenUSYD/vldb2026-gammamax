@@ -1,0 +1,17 @@
+{
+  "column": "ACLSWKR",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Federal government",
+    " Local government",
+    " Never worked",
+    " Not in universe",
+    " Private",
+    " Self-employed-incorporated",
+    " Self-employed-not incorporated",
+    " State government",
+    " Without pay"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "column": "education",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "10th",
+    "11th",
+    "12th",
+    "5th-6th",
+    "7th-8th",
+    "9th",
+    "Assoc-acdm",
+    "Assoc-voc",
+    "Bachelors",
+    "Doctorate",
+    "HS-grad",
+    "Masters",
+    "Prof-school",
+    "Some-college"
+  ]
+}

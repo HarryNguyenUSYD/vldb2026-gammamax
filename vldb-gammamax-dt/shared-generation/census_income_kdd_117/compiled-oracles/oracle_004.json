@@ -1,0 +1,25 @@
+{
+  "column": "AHGA",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " 10th grade",
+    " 11th grade",
+    " 12th grade no diploma",
+    " 1st 2nd 3rd or 4th grade",
+    " 5th or 6th grade",
+    " 7th and 8th grade",
+    " 9th grade",
+    " Associates degree-academic program",
+    " Associates degree-occup /vocational",
+    " Bachelors degree(BA AB BS)",
+    " Children",
+    " Doctorate degree(PhD EdD)",
+    " High school graduate",
+    " Less than 1st grade",
+    " Masters degree(MA MS MEng MEd MSW MBA)",
+    " Prof school degree (MD DDS DVM LLB JD)",
+    " Some college but no degree"
+  ]
+}

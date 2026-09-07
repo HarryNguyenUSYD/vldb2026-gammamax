@@ -1,0 +1,11 @@
+{
+  "column": "AHSCOL",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " College or university",
+    " High school",
+    " Not in universe"
+  ]
+}

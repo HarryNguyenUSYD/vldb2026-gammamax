@@ -1,0 +1,10 @@
+{
+  "column": "contact",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "cellular",
+    "telephone"
+  ]
+}

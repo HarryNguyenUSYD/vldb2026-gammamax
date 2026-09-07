@@ -1,0 +1,11 @@
+{
+  "column": "poutcome",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "failure",
+    "other",
+    "success"
+  ]
+}

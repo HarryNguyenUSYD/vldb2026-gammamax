@@ -1,0 +1,15 @@
+{
+  "column": "capital-gain",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "0",
+    "15024",
+    "2354",
+    "5013",
+    "594",
+    "7298",
+    "7688"
+  ]
+}

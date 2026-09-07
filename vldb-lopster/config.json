@@ -1,0 +1,15 @@
+{
+  "algorithm": {
+    "seed": 0,
+    "training_max_rows": 8000,
+    "validation_fraction": 0.1,
+    "epochs": 100,
+    "learning_rate": 0.001,
+    "latent_dimension": 120,
+    "operators": 12,
+    "batch_size": 256,
+    "missing_value_replacement": 3,
+    "model_cache": "models",
+    "reuse_model": true
+  }
+}

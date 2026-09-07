@@ -1,0 +1,22 @@
+{
+  "column": "previous",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "0",
+    "1",
+    "10",
+    "11",
+    "14",
+    "17",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ]
+}

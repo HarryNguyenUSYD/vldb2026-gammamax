@@ -1,0 +1,14 @@
+{
+  "column": "workclass",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "Federal-gov",
+    "Local-gov",
+    "Private",
+    "Self-emp-inc",
+    "Self-emp-not-inc",
+    "State-gov"
+  ]
+}

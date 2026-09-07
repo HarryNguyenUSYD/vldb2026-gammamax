@@ -1,0 +1,12 @@
+{
+  "column": "income",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "$11-$25k",
+    "$25-$50k",
+    ">$50k",
+    "under $11k"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "column": "month",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "apr",
+    "aug",
+    "dec",
+    "feb",
+    "jan",
+    "jul",
+    "jun",
+    "mar",
+    "may",
+    "nov",
+    "oct",
+    "sep"
+  ]
+}

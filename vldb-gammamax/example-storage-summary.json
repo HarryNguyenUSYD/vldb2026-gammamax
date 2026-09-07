@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "max_positive_examples_stored": 221,
+  "max_negative_examples_stored": 24059,
+  "datasets": {
+    "generated-90/adult_20/run/benchmark.json": {
+      "max_positive_examples_stored": 198,
+      "max_negative_examples_stored": 16290
+    },
+    "generated-90/bank_marketing_222/run/benchmark.json": {
+      "max_positive_examples_stored": 182,
+      "max_negative_examples_stored": 2624
+    },
+    "generated-90/census_income_kdd_117/run/benchmark.json": {
+      "max_positive_examples_stored": 190,
+      "max_negative_examples_stored": 24059
+    },
+    "generated-90/support2_880/run/benchmark.json": {
+      "max_positive_examples_stored": 221,
+      "max_negative_examples_stored": 6042
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "algorithm": {
+    "retrieval_limit": 5,
+    "model": "gpt-4o-mini",
+    "request_timeout_seconds": 60
+  }
+}

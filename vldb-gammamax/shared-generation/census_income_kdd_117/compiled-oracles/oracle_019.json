@@ -1,0 +1,14 @@
+{
+  "column": "GRINREG",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    " Abroad",
+    " Midwest",
+    " Northeast",
+    " Not in universe",
+    " South",
+    " West"
+  ]
+}

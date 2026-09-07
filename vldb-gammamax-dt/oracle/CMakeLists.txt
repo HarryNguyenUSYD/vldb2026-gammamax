@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+project(vldb_theory_oracle LANGUAGES CXX)
+add_executable(vldb_theory_oracle main.cpp)
+target_compile_features(vldb_theory_oracle PRIVATE cxx_std_20)
+target_include_directories(vldb_theory_oracle PRIVATE ../algorithm/vendor)

@@ -1,0 +1,11 @@
+{
+  "column": "VETYN",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "0",
+    "1",
+    "2"
+  ]
+}

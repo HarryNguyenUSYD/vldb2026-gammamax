@@ -1,0 +1,10 @@
+{
+  "column": "year",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "enum",
+  "values": [
+    "94",
+    "95"
+  ]
+}

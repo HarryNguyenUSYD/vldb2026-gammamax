@@ -1,0 +1,10 @@
+{
+  "column": "age",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "regex",
+  "regex": "^(?:\\d{2})$",
+  "shapes": [
+    "\\d{2}"
+  ]
+}

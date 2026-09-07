@@ -1,0 +1,101 @@
+age,workclass,fnlwgt,education,education-num,marital-status,occupation,relationship,race,sex,capital-gain,capital-loss,hours-per-week,native-country,income
+23,Private,2,Some-college,10,fever-married,Sales,Not-in-family,White,&Fem7l[,0,p,,Un_ited'Ltbates,<5(
+n44,Private,k'8Na0,Assoc-acdm,12,Div#cqd,Prof-specialty,Not-in-family,Whte,,0,;,43,United-States,<=50K
+19,Private,1S52,Some-college,D0,Nevr-married,A$dm-ceical,N1ot-in.-family,Asian-Pac-Islander,Male,0,0,,Vietnam,<=50K
+46,Private,149949,7thz-8th,e,Married-civ-spo]use,Transport-mov1ng,"H.ubAd,",h_,Male,x,0,3,UKni'e-States,<=50K
+"eQ,m8",Pri0}amtSe,C6cO9,Roctorate,16,MDarrVed-civ-spouse,Prof-specialty,Husb|nd,Asian-Pac-Islander,kal,(0,,40,China,>50K.
+,Privat,254146,S vme-olGlege,10,Married-civ-spouse,C>aft-recpalir,Husband,White,Male,"""7",1902,LY,United-States,>7$0K
+<28,PivtB,186720,Some-college,10,Never-married,Other-service,wn-childT,White,3Velo,^0,0,50,United-Stat2s,<=50
+19,PrivaeZ,208656,,u0',,Adm-clerical,,White,Female,594,0,20,United-States,<=0KU
+2,Loh[-gov,44Tw6oO,11th,7,Never-married,Handlers-cleaners,Own-child,White,M!al,0,-,5q,United-States,<=50K
+56,,9fq:,!Siggad,s,Wowd,Adm-clerical,Unmaried,Asian-Pac-Islander,Femal,0,0,40,Untted-States,<=50K
+38,Private,2896x3Ip,Bcelors&,CJ1N,Divoced,Sales,Unmarried,WJite,Male,0,0,<a,Unite]-0taes,>50K.
+48,Private,315423,5th-6th,3,Married-civ-spouse,Transport-moving,Huanqdh,White,M}e>,G'y,,0.,United-States,<=5sK
+",",Pqiv-e,105141,Some-college,0!,Divorced,WAdm-clericl,Own-child,White,Male,,0,F;,United-States,#=5f-0.
+41,Priv7m,1990h=,10gxh,Gh,Never-married,Hanl`ers-ceaners,Uma}ried,White,Ma?lV,0,0,50,United-States,<=50K
+,?,87{,10th,6,Never-married,?,Own-child,,PemalG,pF,d,460,United-States,<=50K
+23,Pri2t{,b23n5.,Y~Bth,7,Married-civ-spouse,"Ee,-managerial",Osband,+GW\ie,,tf,"""",55,United-States,<=50K
+84,Self-emp-not-inc,155057,Bach[lo7r/?,13,Married-civ-spouse,FarminRg-fishng,Husband,W5,Me_,0,,W_0,Unied-Sttes,<=k02K
+47,State-gov,>16,octoPte,Y16,Separated,ExecmanNeria/,Own-child,Asian-Pac-Islander,l,2354,0,45,United-States,<=50K.
+C,Purivate,:1p952j2,Bachelors,<,Married-civ-spouse,Fzej\-mmanagerial,Wif>e,Black,}e_e,;,6,c,?,<=5JKb
+z3Q,Private,w1692:69,Bac*lous`,13,Married-iv-spouse,Prof-specialty,Gusxband,,M],A5024,(,4on,Puerto-Rico,
+`3,Private,238816,Assoc-voc,11,Married-civ-spou%se,Tech-support,Husband,White,Male,;,0,40,United-States,R(L5K.
+61,F0ederl~gov,294466,Some-college,10,DBvoceA`,Adm-clerical,Not-in-family,7Ylk,FHQmal,0,0,40,QU@onield-States,5=50K|
+38,Private,35429,,9,Married-civ-spouse,,Husband,White,Ma,R,2042,40,uned-Stap tes,<=50K
+"e,6",Private,275'91,11thv,7,N=e}er-mLarried,Transport-moving,Own-child,W$ite,MaVye],0,0,39,UnitAd-ASttes,<=50K
+.,Self-emp-not-inc,09-n,HS-grad,)e,,Craft-repair,,White,Clf,0,5,35,United-States,<=5PK
+57,Private,178154,91,,Widowed,Transport-moving,Not-i;-Bamilxly,White,Male,2,,0,United-States,<=50K.
+1',P rvate,29658,HS-grad,S,Marnrie_d-cv-spuse,Craft-repair,HCusband,kWhitT0,,,0,40,United-Stas,>50K
+5,Private,7i264,Some-college,10,-hrried-cv-spousc,Craft-repair,HTsband,uite,f5ale,,0,34,United-States,<=50K.
+cj3,Private,18k33=,mAsoc-loV,11,Married-civ-spouse,aAdm-cyerical,Wife,Black,Female,0,",k",40,United-States,<=50K
+19,PUate,207173,,9,Separated,,Unmar>did,White,Female,0,,30,Untd-Sat=s,<0
+R,Federal-gov,4a2,9th,5,Divorced,1Jth3r-~ervie,vgotin-fPamily,Black,Female,0,,40,United-States,a=yK.
+/9,PEivte,179668,acheleCr,13,Marrad-civ-sonse,Tech-suppor$,HObDn>d,Whi3te,Mal,>5 ,0,,Ui^ted-States,F5c!K
+24^l,Private,29(2,lH+-gaad,:,Never-married,Craft-re:pair,Own-child,WC*te,,N,0,40,United-States,<=50K
+r~,,423616,,X,Married-civ-spouse,,,W@hEg,Feyl8e,,?,36,United-St0tes,&l50q
+3|m1,Self-emp-inc,343872,Som~co$llee,&,"drrieO-civ;-""spouse",Transport-moving,Husband,B?ack,'1Mlet,C,N,35,Haiti,<=50K
+{B,Private],31128p8,11th,7,Never-marriedm,Execmanagerial,Own-c}hild,White,Female,0,Do E,24,United-States,<=50K.
+,Pi3vat&e,1o260964|kn,RS-rad,9,)arrged-cidv-spouse,Machine-op-inB{c5,2usFaLd,WhiUte,Male,,,4!},Unite-State,<=5j0K.
+37,P-vHe,t6712,HS-grad,9,Divocod,Sales,o}t-in-fa^milya,h0e,},0,0,60,United-StLtes,<=50K
+3*,$ivate,14]3R27,Bachelors,13,aried-c_iv-spouse,Sales,,White,N_alZ,,,40,United-[St ats,>50k
+24,Priv6ate,2T`u53,Some-college,@aL?,Never-married,C&aDft-r7epTi,Unmarried,FWhMBte,cal,0,0,50,?UnitdJtate,<=50K
+,Priva%e,18R97,HS-grad,9,Married-civ-spouse,Craft-rpair,/Own-h;ibd,White,Male,0,,D)4,United-States,<=04K
+28,,927,:SomecYlleghe,10,Married-civ-spouse,,Busbad,White,Male,0,,5,United-States,<V=Z5K.
+,Privae,27S8@,LMS-gtd,90,Married-civ-spouse,Machine-op-inspct,u:sband,Black,,0,SU,40,ULited-StEtes,<=50K
+T27,Prnv5te,169631,HS-gra0,9,Neverg-married,Handlers-cleaners,Own-child,[,cFemale,Cz,0,40,nitd-StatEAg,<=50
+Y,P.Givate,1!8774r`,Som;eM$Dllegk,10,Never-married,Ot>eY-ervice,OSw-jil,White,Female,,l,40,,<=50Kw.
+2,Priva|ve_,257509,`ome-cllngeI,10,Neven-marrieNxW,Sas,Not-in-family,%Wh(e,Male,4,0,25,UnieVd-State]|,<=50K
+E/S419,Private,82049,HSO-rad,9,Married-civ-spouse,Craft-repair,Husband,Whit,Male,y),0,40,Un*td-StatDs,HwK
+R,,32184,HS-grad,9,Married-civ-spouse,,Wif'Oe,White,*mae,5013,0,15,,=p501.
+,?,;2o5z139,Some-college,,Never-married,?,Own-chiln,White,Fem?uale[,0,0,40,United-States,<=b0K
+r,>Pr)at,30t24,FHS-grad,6H,Never-married,Handlrs-claners,On-`zild,White,Male,0{,r,,United-States,<=50K.
+81ey,0Prvat,168,Prf-A:ghoo,15,D^'ivor/d,Profspecialty,,White,Ml\0,0,0,>,United-States,>5K.
+M2,S6tate-Tgov-,179151,So%-EWcllege,10,Married-civ-spouse,Farming-fishing,Husband,%hite,Male,y,&[,4P,United-States,<=K`0DK.
+7G,Private,124744,Some-college,10,Married-civ-spouse,tof-sfecialIy,Other-relative,hQi`e,MC,^,0,R20\,Unite-Sttes,<=50K
+78,nSelf-Xemp)^ot-in,213136,"H""S-gr?Hafd.",9yy,Widowed,Exec-managerial,Not-in-family,White,Male,%,0,24,"Uit;d,-!StaTtes",<=50K.
+36,tcaoe-go:v,,Bachelors,1,Married-civ-spouse,Ad-clerical,Wife,Wh=Xe,Female,},0,>20,Unitged-StaesK,>50K
+~@,Pi[ate,,BaScNhelors,13,Neer-masrried,Prof-specialty,Not-in-family,,Male,y:,]?s,,United-States,<}50K
+54,Lcal-g*o@w,,NHP=S-Oad,9,"Marri7-civ-sp,uu<e",Farming-fishing,Husband,White,Hale,0,0,40,United=-Staes,l50
+41,P[?vate,289551,HS-grad,9,Marrie-civ-spousi,Handefrs-cleaGeiMs,Husbkand,White,Male,7688,,40,United-States,?>VK
+,PiN}'te,9703,S9m-collge,1:0,Divorced,OKher-service,Nots-in-fly,Whiie,Fe5tmal,0,0,30,Unied-Stres,<=50K
+D5,Prvate,z13m3[03B,Some-college,Dz0,Widowed,;{4s,Unmarried,White,hmalhD, ,,~,United-GSates,+50 
+39,SWelf-em-not-inc,126569,Prof-school,,Married-civ-spouse,Prof-gYspecialty,Hubr*d,Whwite,Male,15024,0,~N_,U9ite3d-States,>50K
+F,yPYvae,^u?5^97,Assoc-voc,11,,Craft-repair,Husband,White,KjMe,Cr,0,40,PUnited-Sttes,=kK
+W2I6,Private,666014,Bachelors,M,Nver-married,Exec-managerial,Mot-in-family,Wh t,\6emal,Y0,o^,,United-Sta%tes,<=50K.
+,Self-emp-inc,146103,Bachelors,d3,Married-civ-spouse,VPrf-spu7cialty,Husband,White,Male,,b>,,United-rates,=50K
+Mu43`,Private,A15675,Some-college,,Married-civ-spouse,Craft-repair,Husband,BlMc=y.k,Male,0,0,40,United-States,<=50K
+v3!7,Private,236246,AHoc-adm3\,12,Married-civ-spouse,ExemanIgeral,Husband,White,Male,},0,%x,United-States,<=50K
+32,,#610,Prof-scool,,Married-civ-spouse,,Wife,White,Fx(ma=e,8kN524,"s0J""",",",,uH.
+Y,Priva.te,139647,Some-college,u8,Divorced,Exec-managerial,Sot-inJ-fWamly,Whtpe,*FlNe,0,Q#s0,40,United-States,>50K
+s2c,?,134566,Do|toJrte,16,Married-Jcwv-spouse,?,Husband,White,le,0,0,50,United-States,>50K
+9],Pr*.e,1C75G,'9n,=!,Never-married,Adm-clerical,Not-in-family,White,Female,3,,40,Un{e-St)teAs, <=5%K
+<2n3,State-gov,,o5e7cCllee,10,MIrried-civ-spouse,Protective-serv,xsbpnd,te,Gco,0A,0,32,United=-Ntates,<=50K
+_,Private,2qS0C429,Asso@-vYc,f;,Separated,,,Black,F<male,0,c,)U,United-States,<=50K.
+45,Private,30289,Lz2(,8,Marriedciv-spouZDse,"Craft,-rtexirm",Husband,White,Male,-,0,40Z,United-States,^<0KA
+41,PvivatSe,174395,Masters,14,MarriedFcitvyspouse,*P;jof-specialty,Hus5a2d,"W,hoKte",2 ble,,FI,40,UnUted-Stmtes,
+/&3j,PrRvate,56@510,Some-college,10,"Marr;em!d-civ-spo,us=",Crft-repair,H|u8sband,Asian-Pac-Islander,Male,0,}!+0,40,UnitXed]Sstes,<=50K
+,PiatW,97197,Some-college,10,Divorced,SaleL,Not-in-family,W7)tRt,JFal,{b=,0,,"f,ite -State~s",<=0.$
+<,SSmatC-gov,39630,Bac.hVeKlor,U3,Married-civ-spouse,Prof-specalty,HusbuanDd,Wh:tee,Male,bU},0,40,UiRed-States,<=50K
+53,Private,98561,H[-6gr*Y,v,Widowed,Tech-support,Not-in-family,White,)/le,},,9,United-States,>50K.
+6;,Private,q7886,7th-8th,4,Divorced,Other-service,Not-in-family,White,Male,0,0,40,United-States,<W=50K
+bP1,Priv4te,32g,HS-grad, &,Divorced,Other-service,Not-in-family,White,Male,d0Z,0,Ib,PUnited-S9ats,
+26,Private,77,Some-college,10+,Never-married,Ohe;-srervice,Not-in-family,"""ite",Female,,f1,p,UnitedqStaoes,<=5h4
+39,Private,186934,HS-grad,,Married-civ-spouse,Craft-repair,Husand,WShit,Male,0,,Qi,,<=50K.
+49,Priv;te,5555I,Some-college,10,Married-civ-spouse,"""Adm-clerical",Wife,]hiyeF,Female,o{,0,40,Uni>eMQStates,>50K
+33,Private,1?0:142,12th,8,Never-married,Craft-repair,Unmarried,White,Male,0,52} ,40,United-States,<=50K.
+23,Private,214236,HS/tgrado,9,Never-married,Adm-clerical,Not-in-family,,Female,hm,0,4Z]/,United-States,<=50K.
+4^,Self-emp-not-iAc,344Tj86D4,Doctorate,JD,~Nev-Xarried,ProfyspecilIFty,Notin-family,White,Male,.,\+,99,nite-StaeI,>50K.
+r5,Private,N75540,HS-gap,`,Neer-maHrried,Adm-clerical,Not-in-family,White,Male,0,,50,United-States,<=50K
+:,Private,v49>46,10Ih,6,Married-civ-spouse,Handlers-cleaners,Husband,White,6Ole),JHZ,0,0,United-States,<=50K
+,rvat,182567,B=cUlors,13,Married-civ-spouse,Exec-managerial,Husban,"M,W]ite",{,T,9,40,?,>50K
++8^,Self-emp-inc,71009,Bachelors,13,Married-ciNv-spouse,Exec-managerial,Wife,Asian-Pac-Islander,Female,7298,0,7C0,,>0K.
+@,Local-gov,1.65#30,ossoc2-acdm,m^,Divorced,Eec-manager[al,Not-in-famil5y,Black,Female,d,0,40,United-States,
+4i9,,183013,,",+",Marriedciv-sp^use,,HusbaQnd,White,NMale,0,Q,40,Uited-StZtes,"K5,G"
+67,,"""251.|4",Some-c9ollege,,WddoGeh,,ot-if-familly,WhiPe,Fea,0,0,4,United-States,<=50K.
+`,Stat$e-gov,199915,HS-grad,9,"Neve,-married",Other-service,Own-cild,White,Femkase,}zL,0,21,United-States,<=VK
+41,Federal-gov,,BUacheulYors,13,aoried-civ-spo#u5e,Adm-clerical,Wife,Asian-Pac-Islander,Female,0,0,K.4R0,Philippines,5E0K
+54,Private,188136,BacqheloZs,13,DiDvorcd,Sales,ot}iL7-famly,Wgi,FemZ>,0,1408,38,United-States,<nD50K
+S^,?,32276,aV.elors,13c,Married-civ-spouse,?,Husband,White,Male,QS,0,,United-States,<=50K
+,Private,,HS-grad,a,Married-civ-spouse,Sales,Husband,Black,Male,~,",",}4H,United-States,<F|0K
+41,Private,32,HS-grad,9,Married-civ-spouse,Exec1manageial,Husband,White,,7298,0,e,nited-States,>C0Kr
+42,Private,f4 43),Some-college,O7%,Married-civ-spouse,Prof-specialty,Bife,,Fecm()e,GE,,25,,5=5.

@@ -1,0 +1,12 @@
+{
+  "column": "alb",
+  "accepts_empty": false,
+  "empty_policy": "rejected",
+  "type": "regex",
+  "regex": "^(?:\\d{1}\\.\\d{1}|\\d{1}\\.\\d{6}|\\d{1}\\.\\d{7})$",
+  "shapes": [
+    "\\d{1}\\.\\d{1}",
+    "\\d{1}\\.\\d{6}",
+    "\\d{1}\\.\\d{7}"
+  ]
+}
